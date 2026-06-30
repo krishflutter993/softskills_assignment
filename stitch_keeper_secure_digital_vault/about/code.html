@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>About KEEPER</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Geist:wght@400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #12131b;
+            color: #e2e1ed;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            background: rgba(30, 31, 39, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+        .inner-glow {
+            box-shadow: inset 0 0 20px rgba(184, 196, 255, 0.05);
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.05); }
+        }
+        .bg-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(184, 196, 255, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(40px);
+            animation: pulse-slow 8s infinite ease-in-out;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#452000",
+                        "surface-tint": "#b8c4ff",
+                        "tertiary": "#ffb781",
+                        "on-primary-fixed": "#001454",
+                        "on-primary": "#002585",
+                        "surface-container-low": "#1a1b23",
+                        "secondary": "#d2bbff",
+                        "secondary-fixed": "#eaddff",
+                        "tertiary-fixed": "#ffdcc5",
+                        "tertiary-fixed-dim": "#ffb781",
+                        "surface": "#12131b",
+                        "surface-container": "#1e1f27",
+                        "on-surface-variant": "#c4c5d7",
+                        "on-background": "#e2e1ed",
+                        "background": "#12131b",
+                        "on-tertiary-fixed-variant": "#703800",
+                        "surface-container-lowest": "#0c0e15",
+                        "on-secondary-fixed": "#25005a",
+                        "tertiary-container": "#db7612",
+                        "outline": "#8e90a0",
+                        "outline-variant": "#444654",
+                        "on-secondary-fixed-variant": "#581ab8",
+                        "surface-container-highest": "#33343d",
+                        "primary-container": "#6c88ff",
+                        "secondary-fixed-dim": "#d2bbff",
+                        "surface-dim": "#12131b",
+                        "error": "#ffb4ab",
+                        "surface-variant": "#33343d",
+                        "primary-fixed-dim": "#b8c4ff",
+                        "on-secondary": "#3e008e",
+                        "surface-bright": "#383941",
+                        "on-tertiary": "#4e2500",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#0037ba",
+                        "on-surface": "#e2e1ed",
+                        "primary-fixed": "#dde1ff",
+                        "on-tertiary-fixed": "#301400",
+                        "on-error": "#690005",
+                        "surface-container-high": "#282932",
+                        "primary": "#b8c4ff",
+                        "inverse-surface": "#e2e1ed",
+                        "inverse-on-surface": "#2f3038",
+                        "on-secondary-container": "#c6aaff",
+                        "inverse-primary": "#2c51d4",
+                        "on-primary-container": "#001f75",
+                        "secondary-container": "#5a1eba",
+                        "error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "margin-desktop": "40px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "margin-mobile": "20px",
+                        "sm": "12px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Geist"],
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "code-sm": ["Geist"],
+                        "body-md": ["Inter"],
+                        "headline-xl": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "code-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-xl": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+<!-- TopAppBar Mapping -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_32px_0_rgba(184,196,255,0.1)] flex items-center justify-between px-margin-mobile h-16">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 duration-200 transition-opacity hover:opacity-80">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">KEEPER</span>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A professional studio headshot of a user for a security app profile. The person is looking directly at the camera with a confident expression. The lighting is soft and directional, with cool blue ambient tones reflecting the cyber-minimalist brand identity. High-resolution, professional photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJhc0ub02nlXNMWmI1QDyeaPDY7XHJaBwfGdoWogTVX56J7T2ARxIqHXw6Tk28zerf4sBM8gnD4eE7u4G5roRT70BeRcfvtmJdFOhagOAbCPjbd07uWdMNNuKKu-ryMv5YWrawVHMo4m7WCT9vn1ZDZOtQzy6Cf6u1iTJYhHt_Tb3lixsjRVaVLeGoYljuKQk0CnzGhgYLmahVR9TozIVHAP5iRv8uCLVdCI6gIwpX-eDQK21k4Sf7z63rnaGR5CtXhjvQkGOKCWI"/>
+</div>
+</header>
+<main class="flex-grow pt-24 pb-32 px-margin-mobile relative overflow-hidden">
+<!-- Background Atmospheric Glows -->
+<div class="bg-glow top-20 -left-20"></div>
+<div class="bg-glow bottom-40 -right-20" style="animation-delay: -4s;"></div>
+<!-- Hero Section: Logo & Version -->
+<div class="flex flex-col items-center justify-center text-center mb-xl">
+<div class="relative w-48 h-48 mb-lg flex items-center justify-center">
+<!-- Static representation of the animation logic requested -->
+<!-- STITCH_SVG_START:ANIMATION_2 class="absolute inset-0 w-full h-full rounded-full opacity-40" --><div class="absolute inset-0 w-full h-full rounded-full opacity-40" id="animated-svg-ANIMATION_2" style="display:block;"><svg viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient id="logoGradient" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#5B7CFF;stop-opacity:1"></stop>
+<stop offset="100%" style="stop-color:#9C6BFF;stop-opacity:1"></stop>
+</lineargradient>
+<filter height="140%" id="glow" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="5"></fegaussianblur>
+<fecomposite in="SourceGraphic" in2="blur" operator="over"></fecomposite>
+</filter>
+</defs>
+<!-- Outer Shield -->
+<path d="M100 20 L40 45 V90 C40 135 100 180 100 180 C100 180 160 135 160 90 V45 L100 20Z" fill="none" stroke="url(#logoGradient)" stroke-linecap="round" stroke-linejoin="round" stroke-width="8">
+<animate attributename="stroke-dasharray" dur="2s" fill="freeze" from="0 600" to="600 600"></animate>
+</path>
+<!-- Inner Keyhole -->
+<g filter="url(#glow)">
+<circle cx="100" cy="85" fill="url(#logoGradient)" r="15">
+<animate attributename="opacity" dur="3s" repeatcount="indefinite" values="0.5;1;0.5"></animate>
+</circle>
+<path d="M90 100 L110 100 L115 140 L85 140 Z" fill="url(#logoGradient)">
+<animate attributename="opacity" dur="3s" repeatcount="indefinite" values="0.5;1;0.5"></animate>
+</path>
+</g>
+<!-- Circuit Lines -->
+<path d="M60 70 H80 M120 70 H140 M60 110 H80 M120 110 H140" stroke="#C7D2FE" stroke-linecap="round" stroke-width="4">
+<animate attributename="opacity" dur="2s" repeatcount="indefinite" values="0;1;0"></animate>
+</path>
+</svg></div><!-- STITCH_SVG_END:ANIMATION_2 -->
+<div class="relative z-10 p-8 rounded-full glass-card border-primary/20 inner-glow flex items-center justify-center">
+<span class="material-symbols-outlined text-[80px] text-primary" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+</div>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface mb-xs">KEEPER</h1>
+<p class="font-label-md text-label-md text-primary tracking-[0.2em] uppercase mb-md">Secure Identity Enclave</p>
+<div class="inline-flex items-center px-4 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary font-code-sm text-code-sm">
+                v2.4.0
+            </div>
+</div>
+<!-- Bento Grid Info Cards -->
+<div class="grid grid-cols-1 gap-md max-w-lg mx-auto">
+<!-- Developer Info -->
+<div class="glass-card p-lg rounded-lg flex flex-col gap-sm">
+<div class="flex items-center gap-md text-primary">
+<span class="material-symbols-outlined">corporate_fare</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Developer</span>
+</div>
+<p class="font-headline-lg text-headline-lg text-on-surface">KEEPER Enclave Ltd.</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Leading the standard in decentralized zero-knowledge architecture and digital fortification.</p>
+</div>
+<!-- Links Section -->
+<div class="glass-card rounded-lg overflow-hidden">
+<a class="flex items-center justify-between p-lg hover:bg-white/5 transition-colors border-b border-white/5 active:scale-[0.98] duration-200" href="#">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary">policy</span>
+<span class="font-body-md text-body-md">Privacy Policy</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-lg hover:bg-white/5 transition-colors border-b border-white/5 active:scale-[0.98] duration-200" href="#">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary">gavel</span>
+<span class="font-body-md text-body-md">Terms of Service</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-lg hover:bg-white/5 transition-colors active:scale-[0.98] duration-200" href="#">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary">contact_support</span>
+<span class="font-body-md text-body-md">Support</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</a>
+</div>
+<!-- Switzerland Tag -->
+<div class="flex items-center justify-center gap-2 mt-md opacity-60">
+<span class="font-label-md text-label-md text-on-surface-variant">Made with</span>
+<span class="material-symbols-outlined text-error text-[14px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-label-md text-label-md text-on-surface-variant">in Switzerland</span>
+</div>
+</div>
+</main>
+<!-- BottomNavBar Mapping -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-40px)] rounded-full bg-surface-container/60 backdrop-blur-2xl border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex justify-around items-center h-16 px-4 z-50">
+<button class="text-on-surface-variant p-3 hover:text-primary transition-colors active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined">home</span>
+</button>
+<button class="text-on-surface-variant p-3 hover:text-primary transition-colors active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined">lock</span>
+</button>
+<button class="text-on-surface-variant p-3 hover:text-primary transition-colors active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined">sync_alt</span>
+</button>
+<!-- Active State Logic: 'Settings' / 'About' maps to Settings tab -->
+<button class="bg-primary/20 text-primary rounded-full p-3 shadow-[0_0_15px_rgba(184,196,255,0.3)] active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction for hover effects on glass cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body></html>

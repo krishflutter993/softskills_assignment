@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist:wght@400;500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#452000",
+                    "surface-tint": "#b8c4ff",
+                    "tertiary": "#ffb781",
+                    "on-primary-fixed": "#001454",
+                    "on-primary": "#002585",
+                    "surface-container-low": "#1a1b23",
+                    "secondary": "#d2bbff",
+                    "secondary-fixed": "#eaddff",
+                    "tertiary-fixed": "#ffdcc5",
+                    "tertiary-fixed-dim": "#ffb781",
+                    "surface": "#12131b",
+                    "surface-container": "#1e1f27",
+                    "on-surface-variant": "#c4c5d7",
+                    "on-background": "#e2e1ed",
+                    "background": "#12131b",
+                    "on-tertiary-fixed-variant": "#703800",
+                    "surface-container-lowest": "#0c0e15",
+                    "on-secondary-fixed": "#25005a",
+                    "tertiary-container": "#db7612",
+                    "outline": "#8e90a0",
+                    "outline-variant": "#444654",
+                    "on-secondary-fixed-variant": "#581ab8",
+                    "surface-container-highest": "#33343d",
+                    "primary-container": "#6c88ff",
+                    "secondary-fixed-dim": "#d2bbff",
+                    "surface-dim": "#12131b",
+                    "error": "#ffb4ab",
+                    "surface-variant": "#33343d",
+                    "primary-fixed-dim": "#b8c4ff",
+                    "on-secondary": "#3e008e",
+                    "surface-bright": "#383941",
+                    "on-tertiary": "#4e2500",
+                    "on-error-container": "#ffdad6",
+                    "on-primary-fixed-variant": "#0037ba",
+                    "on-surface": "#e2e1ed",
+                    "primary-fixed": "#dde1ff",
+                    "on-tertiary-fixed": "#301400",
+                    "on-error": "#690005",
+                    "surface-container-high": "#282932",
+                    "primary": "#b8c4ff",
+                    "inverse-surface": "#e2e1ed",
+                    "inverse-on-surface": "#2f3038",
+                    "on-secondary-container": "#c6aaff",
+                    "inverse-primary": "#2c51d4",
+                    "on-primary-container": "#001f75",
+                    "secondary-container": "#5a1eba",
+                    "error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "margin-desktop": "40px",
+                    "base": "8px",
+                    "xs": "4px",
+                    "xl": "32px",
+                    "lg": "24px",
+                    "md": "16px",
+                    "margin-mobile": "20px",
+                    "sm": "12px"
+            },
+            "fontFamily": {
+                    "label-md": ["Geist"],
+                    "body-sm": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "code-sm": ["Geist"],
+                    "body-md": ["Inter"],
+                    "headline-xl": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "code-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(30, 31, 39, 0.4);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .active-glow {
+            box-shadow: 0 0 20px rgba(184, 196, 255, 0.15);
+        }
+        body {
+            background-color: #0c0e15;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(44, 81, 212, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(90, 30, 186, 0.1) 0px, transparent 50%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-background min-h-screen pb-32">
+<!-- Top Navigation Anchor (Manual Integration based on Shared Components) -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_32px_0_rgba(184,196,255,0.1)]">
+<div class="flex items-center justify-between px-margin-mobile h-16 max-w-5xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A close-up portrait of a professional individual with a modern, high-tech aesthetic. The lighting is soft and blue-toned, reflecting off a polished glass surface in the background. The person has a calm, confident expression, symbolizing trust and security in a digital fortification environment. The overall style is clean, sharp, and premium." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2ZaecOUq_7_VRvW4ah0Q8juXfBdRn5CSYWAhL5ziStHDGRL9aRflZ3B5dA_mm9k1shUttzkAjwOl0u308va8FR-582tbQn5diMNcfFLBdBNlUgz4Aun1FHo2tLH8Fi_k7u5I8rhDGdUDSYHf7JFfl4QAg2-WfKVlkKIwwx4p6NnbkZi1hQzWLyQxYBj0Tda3rcEWpTB08N9ZiyqhLu2-GzwgSYNYLjxNrwS-vC3zmsNFLC-aW3EflBsueCiT5N3VYLVL1trejN3A"/>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">VAULT</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:opacity-80 active:scale-95 duration-200" data-icon="search">search</button>
+<button class="material-symbols-outlined text-primary hover:opacity-80 active:scale-95 duration-200" data-icon="sort">sort</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 px-margin-mobile max-w-5xl mx-auto space-y-md">
+<!-- Search/Category Quick Filter (Implicitly helpful for Vault) -->
+<div class="flex gap-sm overflow-x-auto pb-2 no-scrollbar">
+<button class="bg-primary/20 text-primary px-4 py-2 rounded-full font-label-md text-label-md active-glow border border-primary/20">All</button>
+<button class="bg-surface-container text-on-surface-variant px-4 py-2 rounded-full font-label-md text-label-md border border-white/5">Social</button>
+<button class="bg-surface-container text-on-surface-variant px-4 py-2 rounded-full font-label-md text-label-md border border-white/5">Streaming</button>
+<button class="bg-surface-container text-on-surface-variant px-4 py-2 rounded-full font-label-md text-label-md border border-white/5">Work</button>
+<button class="bg-surface-container text-on-surface-variant px-4 py-2 rounded-full font-label-md text-label-md border border-white/5">Finance</button>
+</div>
+<!-- Password Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
+<!-- Vault Item: Google -->
+<div class="glass-card p-lg rounded-lg flex flex-col gap-md group hover:active-glow transition-all duration-300">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center overflow-hidden border border-white/10">
+<img class="w-8 h-8 object-contain" data-alt="A minimalist and sharp Google brand icon rendered in a futuristic 3D glass style. The primary colors of Google—blue, red, yellow, and green—are vibrant and slightly emissive against a dark, tech-focused background. The lighting is crisp, emphasizing the glossy texture and professional cyber-minimalist aesthetic of the password vault." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9qP-qTsEiT0FEYj_Plh0WtVLSyqB1Yqx8ywbgj5LjGx5OvHTT4PCuffKhRatyQpyOpGFj3rgZ73E5UkDtutrQmc19pW3KszahWC8okyEdlX8FaRUr96Wq177u7NMVTu0LsPan9_AhGb-VFfGOI4oeHUDymJS-z81fGE6nXz0LSwvCh_sbZ_Qm6nu4bm8XdDLeQqChOlizc7FWmoRkcKIyTFYGjGpbde5er-BxIMiJW5vwaM9G2vb49ftZhmybaJiL36I55vn3GdI"/>
+</div>
+<div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Google</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">alex.d@gmail.com</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+<div class="flex items-center justify-between mt-auto pt-md border-t border-white/5">
+<div class="flex gap-xs">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<button class="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-4 py-2 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+<span class="font-label-md text-label-md">Copy</span>
+</button>
+</div>
+</div>
+<!-- Vault Item: Netflix -->
+<div class="glass-card p-lg rounded-lg flex flex-col gap-md group hover:active-glow transition-all duration-300">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center overflow-hidden border border-white/10">
+<img class="w-8 h-8 object-contain" data-alt="The Netflix 'N' logo presented as a sleek, crimson-red glowing sculpture in a dark, atmospheric digital void. The red light creates a soft halo effect, reinforcing the high-end consumer electronics feel. The composition is centered and minimalist, with sharp edges and a premium glass finish, perfectly fitting a cybersecurity app's aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRvMAq3X3_D1AAmXMkj_QdvMKiq3D_jFyK-dXqJd5OsZOllXxzHNevNAa1gXOpb2VauZ9WEnHe7NAYmCQBG6NgvB1B_CfX-ByHn5jYSvu6AidS2hj0FZ4uq0Rr7MynRRykAxi25Y-gPDBjJnfFNKRhj-aL0jYu_Q7e7Pfa8rtOyW7pptqePxDbVJUQlfCo248g2pjMgCArlVKSnSb2hBMBXKRT7IoNvxYA5dWB0Sa5zaUWXsVMhkUqhnm_O9Wmq2GwqDCdsbYEhGY"/>
+</div>
+<div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Netflix</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">family_stream@home.net</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="flex items-center justify-between mt-auto pt-md border-t border-white/5">
+<div class="flex gap-xs">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<button class="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-4 py-2 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+<span class="font-label-md text-label-md">Copy</span>
+</button>
+</div>
+</div>
+<!-- Vault Item: Spotify -->
+<div class="glass-card p-lg rounded-lg flex flex-col gap-md group hover:active-glow transition-all duration-300">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center overflow-hidden border border-white/10">
+<img class="w-8 h-8 object-contain" data-alt="A stylized Spotify logo icon with an electric green glow, appearing as a translucent glass object. The three curved lines are precisely etched and emit a soft light into the surrounding deep navy atmosphere. The style is modern, reductive, and evokes a sense of high-tech digital identity and entertainment control." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBY6ICp9ksZLO1N3BAF2U-jGCeGUiEgJInsc-cWqbVNpPbFanWn7dju_XGXEwVmM7Z6bgBkhtWdGyMbFwyE_WmtYwhvv0n4N7dAqgC4cJkrVSlWsz1yPTti9ZKKuDsE1fylDYmxIAQpl1x8y5ac0BbASXJDz4ikvjWWm_VDNn4XpHNvOfD2q1R5UQ5U_5uV2V-JGpq5K5LlC8Qk2a7JZ3yaM-ASQx44eh97Acq_jCAitQQy6VstlJAs60VFPZ2o7iqmso2IeLrDZ7M"/>
+</div>
+<div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Spotify</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">music_lover_99</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+<div class="flex items-center justify-between mt-auto pt-md border-t border-white/5">
+<div class="flex gap-xs">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<button class="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-4 py-2 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+<span class="font-label-md text-label-md">Copy</span>
+</button>
+</div>
+</div>
+<!-- Additional Vault Items for List feel -->
+<!-- Vault Item: GitHub -->
+<div class="glass-card p-lg rounded-lg flex flex-col gap-md group hover:active-glow transition-all duration-300">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center overflow-hidden border border-white/10">
+<img class="w-8 h-8 object-contain" data-alt="A sleek, metallic GitHub Octocat logo with silver accents and subtle white lighting. The icon is set against a dark, minimalist tech background with a slight glassmorphic blur. The lighting is sophisticated, emphasizing the precision and authoritative nature of a developer's digital identity tool." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBS6O4m-aGapIJfzuzXsVmcLk7uEwQ9JMbc3MYCUh_RbndP0zraXge93x96OeI67fwO3XRIO_hq6aiMe3PvLhPyc2Hg42-17qBhlqxRIsfLcnvdL7mQMX5tUyMGA5wTFl9GnWc4AaukYMkFv5ZekdHPF8Ifw7tEA_tjywA7FJuMn2hErvoTdtUB3WDk4LJaIVGm6yGws3UjG0JthQbmTj44DgUenPW9DxyrWNYcsyJOMgLfmlYQpB5Qn1UJdExlNQNQ_qRoMHkQPBg"/>
+</div>
+<div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">GitHub</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">dev_lead_pro</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="flex items-center justify-between mt-auto pt-md border-t border-white/5">
+<div class="flex gap-xs">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<button class="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-4 py-2 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+<span class="font-label-md text-label-md">Copy</span>
+</button>
+</div>
+</div>
+<!-- Vault Item: Amazon -->
+<div class="glass-card p-lg rounded-lg flex flex-col gap-md group hover:active-glow transition-all duration-300">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center overflow-hidden border border-white/10">
+<img class="w-8 h-8 object-contain" data-alt="The Amazon smile logo in a bright orange gradient, floating within a dark navy, high-tech glass container. The style is clean and premium, with soft neumorphic shadows that suggest depth and physical presence in a digital vault environment. The aesthetic is warm yet professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJsEPkFYopbE7c4YN0MIo4v11I08p6qzeyvw8jxQq7Lk0DPCVG2mh6GOvqyF1odALgGB_4vLX7UYi_MH4vp--t3LKEL2VMEZrIf35nGpqGzwTR_Sn32Plt4deHnS7iHqidkB-qKamoO83sBRUbsgxtRpnqWIwLE_URiZMrFYZD9oavpi-k0H4yRTUv9oWZGId7X_0Dg6yXE3BCXW8dmWbHtiptcz44HA8zckJM1hQ9XdM1CPGphwYEgUxQ-fcWIqfY_S4t8j2ZQJA"/>
+</div>
+<div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Amazon</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">shopping@email.com</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+<div class="flex items-center justify-between mt-auto pt-md border-t border-white/5">
+<div class="flex gap-xs">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<button class="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-4 py-2 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+<span class="font-label-md text-label-md">Copy</span>
+</button>
+</div>
+</div>
+<!-- Vault Item: Discord -->
+<div class="glass-card p-lg rounded-lg flex flex-col gap-md group hover:active-glow transition-all duration-300">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center overflow-hidden border border-white/10">
+<img class="w-8 h-8 object-contain" data-alt="A Discord logo icon with a vibrant violet-blue glow, rendered as a futuristic, soft-edged glass asset. The icon is centered in a minimalist dark workspace, with subtle refractive light effects that create a sense of three-dimensional depth and calm digital control." src="https://lh3.googleusercontent.com/aida-public/AB6AXuARUmGKvfFX3BrQcyxSKQTJLM3fqU1ZJ9LkCt-l4hIn0dZ-topC7NuQcOAcStduxjL6BA_sGWj2P8tlwnI7OiuU-HUvyExJVPJPVw1Jax0gV-TnAeKkl00pqsydX3DqKjqwaIT8mdXXyh1-cUzVteugl-p3KclNqSUqw08Gpk0rOB-YHBD_JwjD6voQmuoMMNRHDTBZxME5SF-scxTi5KK9XcdMaH6-KcbJt2CNjL0rl6B_ppDq0rgVnfeNXa7Gc9wTWMO1VntLgtw"/>
+</div>
+<div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Discord</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">gamer_tag_prime</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="flex items-center justify-between mt-auto pt-md border-t border-white/5">
+<div class="flex gap-xs">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<button class="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-4 py-2 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+<span class="font-label-md text-label-md">Copy</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (FAB) -->
+<button class="fixed bottom-28 right-6 w-14 h-14 rounded-full bg-gradient-to-tr from-inverse-primary to-primary-container text-on-primary shadow-[0_10px_30px_rgba(44,81,212,0.4)] flex items-center justify-center z-50 hover:scale-110 active:scale-90 transition-all">
+<span class="material-symbols-outlined text-[28px] font-bold">add</span>
+</button>
+<!-- Bottom Navigation Shell (From Shared Components) -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-40px)] max-w-md rounded-full bg-surface-container/60 backdrop-blur-2xl border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex justify-around items-center h-16 px-4 z-50">
+<div class="flex flex-col items-center">
+<button class="bg-primary/20 text-primary rounded-full p-3 shadow-[0_0_15px_rgba(184,196,255,0.3)] active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+</button>
+</div>
+<div class="flex flex-col items-center">
+<button class="text-on-surface-variant p-3 hover:text-primary transition-colors active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+</button>
+</div>
+<div class="flex flex-col items-center">
+<button class="text-on-surface-variant p-3 hover:text-primary transition-colors active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined" data-icon="sync_alt">sync_alt</span>
+</button>
+</div>
+<div class="flex flex-col items-center">
+<button class="text-on-surface-variant p-3 hover:text-primary transition-colors active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</nav>
+<script>
+        // Micro-interaction for Copy Buttons
+        document.querySelectorAll('button').forEach(btn => {
+            if(btn.textContent.includes('Copy')) {
+                btn.addEventListener('click', function() {
+                    const originalContent = this.innerHTML;
+                    this.innerHTML = `<span class="material-symbols-outlined text-[18px]">check</span><span class="font-label-md text-label-md">Copied</span>`;
+                    this.classList.replace('text-primary', 'text-success');
+                    setTimeout(() => {
+                        this.innerHTML = originalContent;
+                        this.classList.replace('text-success', 'text-primary');
+                    }, 2000);
+                });
+            }
+        });
+
+        // Simple scroll parallax effect for background
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            document.body.style.backgroundPosition = `center ${scrolled * 0.5}px`;
+        });
+    </script>
+</body></html>

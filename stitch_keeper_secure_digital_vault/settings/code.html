@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEEPER | Security Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Geist:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0c0e15; /* surface-container-lowest as base */
+            overflow-x: hidden;
+        }
+        .glass-card {
+            background: rgba(30, 31, 39, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.2);
+        }
+        .inner-glow {
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        }
+        /* Custom Toggle Switch Style */
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #6c88ff;
+        }
+        .toggle-checkbox:checked + .toggle-label .toggle-dot {
+            transform: translateX(100%);
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-tertiary-container": "#452000",
+                "surface-tint": "#b8c4ff",
+                "tertiary": "#ffb781",
+                "on-primary-fixed": "#001454",
+                "on-primary": "#002585",
+                "surface-container-low": "#1a1b23",
+                "secondary": "#d2bbff",
+                "secondary-fixed": "#eaddff",
+                "tertiary-fixed": "#ffdcc5",
+                "tertiary-fixed-dim": "#ffb781",
+                "surface": "#12131b",
+                "surface-container": "#1e1f27",
+                "on-surface-variant": "#c4c5d7",
+                "on-background": "#e2e1ed",
+                "background": "#12131b",
+                "on-tertiary-fixed-variant": "#703800",
+                "surface-container-lowest": "#0c0e15",
+                "on-secondary-fixed": "#25005a",
+                "tertiary-container": "#db7612",
+                "outline": "#8e90a0",
+                "outline-variant": "#444654",
+                "on-secondary-fixed-variant": "#581ab8",
+                "surface-container-highest": "#33343d",
+                "primary-container": "#6c88ff",
+                "secondary-fixed-dim": "#d2bbff",
+                "surface-dim": "#12131b",
+                "error": "#ffb4ab",
+                "surface-variant": "#33343d",
+                "primary-fixed-dim": "#b8c4ff",
+                "on-secondary": "#3e008e",
+                "surface-bright": "#383941",
+                "on-tertiary": "#4e2500",
+                "on-error-container": "#ffdad6",
+                "on-primary-fixed-variant": "#0037ba",
+                "on-surface": "#e2e1ed",
+                "primary-fixed": "#dde1ff",
+                "on-tertiary-fixed": "#301400",
+                "on-error": "#690005",
+                "surface-container-high": "#282932",
+                "primary": "#b8c4ff",
+                "inverse-surface": "#e2e1ed",
+                "inverse-on-surface": "#2f3038",
+                "on-secondary-container": "#c6aaff",
+                "inverse-primary": "#2c51d4",
+                "on-primary-container": "#001f75",
+                "secondary-container": "#5a1eba",
+                "error-container": "#93000a"
+            },
+            "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "gutter": "16px",
+                "margin-desktop": "40px",
+                "base": "8px",
+                "xs": "4px",
+                "xl": "32px",
+                "lg": "24px",
+                "md": "16px",
+                "margin-mobile": "20px",
+                "sm": "12px"
+            },
+            "fontFamily": {
+                "label-md": ["Geist"],
+                "body-sm": ["Inter"],
+                "headline-lg": ["Inter"],
+                "headline-lg-mobile": ["Inter"],
+                "code-sm": ["Geist"],
+                "body-md": ["Inter"],
+                "headline-xl": ["Inter"]
+            },
+            "fontSize": {
+                "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "code-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-32">
+<!-- Background Decoration -->
+<div class="fixed inset-0 pointer-events-none z-0">
+
+<div class="absolute top-[-10%] right-[-10%] w-[400px] h-[400px] bg-primary/10 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-[-5%] left-[-5%] w-[300px] h-[300px] bg-secondary/5 blur-[100px] rounded-full"></div>
+</div>
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_32px_0_rgba(184,196,255,0.1)] flex items-center justify-between px-margin-mobile h-16">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-on-primary-container">person</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">KEEPER</h1>
+</div>
+<button class="text-primary hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined">search</span>
+</button>
+</header>
+<main class="relative z-10 pt-24 px-margin-mobile max-w-2xl mx-auto space-y-xl">
+<!-- User Profile Quick Card -->
+<div class="glass-card inner-glow p-lg rounded-lg flex items-center gap-md">
+<div class="w-16 h-16 rounded-full overflow-hidden border-2 border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A professional close-up portrait of a tech-savvy individual against a dark, minimalist background. The lighting is moody and cinematic with soft blue rim light reflecting the digital fortification brand identity. High-end photography style with sharp focus on the face and soft bokeh in the distance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUbRFdcj9sPlICRskF_0faL-Zj2yxQ4i67PvKKACt5aSrn1z97mA4qMVpne_9pxZhikG6Tf6Twmr413cRJ0UArxlsSfhYE-b1qGN0ihsxL57Jzczrpt8f0QdrvYZO0QW8URFcwtOYZs0LrUrOKHVPmxZjHzdwcOO23wx1rDdcFeulgMIFqqUM6KxFhdE_FruiAoyoNvHZm3CEafyiwWolJhKTJKxGMCKK4dntyD36t8cOmGbbBaGmY5GguYEu5j6cJWFtGaOwyq9A"/>
+</div>
+<div>
+<h2 class="font-headline-lg-mobile text-on-surface">Alex Thompson</h2>
+<p class="font-label-md text-label-md text-on-surface-variant">Security Architect • Pro Account</p>
+</div>
+<div class="ml-auto">
+<span class="bg-primary/20 text-primary px-3 py-1 rounded-full font-label-md text-label-md">VERIFIED</span>
+</div>
+</div>
+<!-- Section: Security -->
+<section class="space-y-md">
+<h3 class="font-label-md text-label-md text-primary uppercase tracking-widest pl-2">Security</h3>
+<div class="glass-card inner-glow rounded-lg overflow-hidden divide-y divide-white/5">
+<div class="flex items-center justify-between p-md hover:bg-white/5 transition-colors group">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">dark_mode</span>
+<span class="font-body-md text-on-surface">Dark Mode</span>
+</div>
+<div class="relative inline-block w-10 mr-2 align-middle select-none">
+<input checked="" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer transition-transform duration-200 ease-in-out left-0 top-0" id="toggle_dark" name="toggle_dark" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-5 rounded-full bg-surface-container-highest cursor-pointer transition-colors duration-200 ease-in-out" for="toggle_dark">
+<span class="toggle-dot block w-5 h-5 rounded-full bg-white shadow transform transition-transform duration-200"></span>
+</label>
+</div>
+</div>
+<div class="flex items-center justify-between p-md hover:bg-white/5 transition-colors group">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">fingerprint</span>
+<span class="font-body-md text-on-surface">Biometric Unlock</span>
+</div>
+<div class="relative inline-block w-10 mr-2 align-middle select-none">
+<input checked="" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer transition-transform duration-200 ease-in-out left-0 top-0" id="toggle_bio" name="toggle_bio" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-5 rounded-full bg-surface-container-highest cursor-pointer transition-colors duration-200 ease-in-out" for="toggle_bio">
+<span class="toggle-dot block w-5 h-5 rounded-full bg-white shadow transform transition-transform duration-200"></span>
+</label>
+</div>
+</div>
+<div class="flex items-center justify-between p-md hover:bg-white/5 transition-colors group cursor-pointer">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">lock_reset</span>
+<span class="font-body-md text-on-surface">Change Master Password</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Section: Notifications -->
+<section class="space-y-md">
+<h3 class="font-label-md text-label-md text-primary uppercase tracking-widest pl-2">Notifications</h3>
+<div class="glass-card inner-glow rounded-lg overflow-hidden divide-y divide-white/5">
+<div class="flex items-center justify-between p-md hover:bg-white/5 transition-colors group cursor-pointer">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">notifications</span>
+<div class="flex flex-col">
+<span class="font-body-md text-on-surface">Alert Preferences</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Email, Push, SMS</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Section: Preferences -->
+<section class="space-y-md">
+<h3 class="font-label-md text-label-md text-primary uppercase tracking-widest pl-2">Preferences</h3>
+<div class="glass-card inner-glow rounded-lg overflow-hidden divide-y divide-white/5">
+<div class="flex items-center justify-between p-md hover:bg-white/5 transition-colors group cursor-pointer">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">translate</span>
+<span class="font-body-md text-on-surface">Language</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface-variant">English (US)</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-md hover:bg-white/5 transition-colors group cursor-pointer">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">palette</span>
+<span class="font-body-md text-on-surface">Theme</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface-variant">Deep Midnight</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Vault -->
+<section class="space-y-md">
+<h3 class="font-label-md text-label-md text-primary uppercase tracking-widest pl-2">Vault</h3>
+<div class="glass-card inner-glow rounded-lg overflow-hidden divide-y divide-white/5">
+<div class="flex items-center justify-between p-md hover:bg-white/5 transition-colors group cursor-pointer">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">cloud_upload</span>
+<span class="font-body-md text-on-surface">Backup to Cloud</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-md hover:bg-white/5 transition-colors group cursor-pointer">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">settings_backup_restore</span>
+<span class="font-body-md text-on-surface">Restore Vault</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-md hover:bg-white/5 transition-colors group cursor-pointer">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">ios_share</span>
+<span class="font-body-md text-on-surface">Export Data</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Section: Legal -->
+<section class="space-y-md">
+<h3 class="font-label-md text-label-md text-primary uppercase tracking-widest pl-2">Legal</h3>
+<div class="glass-card inner-glow rounded-lg overflow-hidden divide-y divide-white/5">
+<div class="flex items-center justify-between p-md hover:bg-white/5 transition-colors group cursor-pointer">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">info</span>
+<span class="font-body-md text-on-surface">About KEEPER</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-md hover:bg-white/5 transition-colors group cursor-pointer">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">policy</span>
+<span class="font-body-md text-on-surface">Privacy Policy</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Section: Dangerous Actions -->
+<section class="space-y-md">
+<div class="glass-card inner-glow rounded-lg overflow-hidden">
+<button class="w-full flex items-center justify-center gap-md p-md hover:bg-error/10 transition-all text-error active:scale-[0.98]">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-md font-bold">Logout</span>
+</button>
+</div>
+<p class="text-center font-label-md text-label-md text-on-surface-variant pt-4">KEEPER v2.4.1 (Build 4022)</p>
+</section>
+</main>
+<!-- Bottom Nav Bar -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-40px)] max-w-md rounded-full bg-surface-container/60 backdrop-blur-2xl border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex justify-around items-center h-16 px-4 z-50">
+<button class="text-on-surface-variant p-3 hover:text-primary transition-colors active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined">home</span>
+</button>
+<button class="text-on-surface-variant p-3 hover:text-primary transition-colors active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined">lock</span>
+</button>
+<button class="text-on-surface-variant p-3 hover:text-primary transition-colors active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined">sync_alt</span>
+</button>
+<button class="bg-primary/20 text-primary rounded-full p-3 shadow-[0_0_15px_rgba(184,196,255,0.3)] active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+</button>
+</nav>
+<script>
+        // Micro-interactions and logic
+        document.querySelectorAll('.glass-card div, .glass-card button').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                // Potential for subtle sound or haptic feedback
+            });
+        });
+
+        // Toggle logic demo
+        const toggles = document.querySelectorAll('.toggle-checkbox');
+        toggles.forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const label = this.nextElementSibling;
+                if (this.checked) {
+                    console.log(`${this.id} enabled`);
+                } else {
+                    console.log(`${this.id} disabled`);
+                }
+            });
+        });
+    </script>
+</body></html>

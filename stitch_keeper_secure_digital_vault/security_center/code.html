@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEEPER | Security Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Geist:wght@400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(19, 32, 66, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .text-glow-primary {
+            text-shadow: 0 0 15px rgba(184, 196, 255, 0.4);
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 0.2; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+        .animate-pulse-ring {
+            animation: pulse-ring 4s infinite ease-in-out;
+        }
+        body {
+            background-color: #12131b;
+            color: #e2e1ed;
+            overflow-x: hidden;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-container": "#452000",
+                      "surface-tint": "#b8c4ff",
+                      "tertiary": "#ffb781",
+                      "on-primary-fixed": "#001454",
+                      "on-primary": "#002585",
+                      "surface-container-low": "#1a1b23",
+                      "secondary": "#d2bbff",
+                      "secondary-fixed": "#eaddff",
+                      "tertiary-fixed": "#ffdcc5",
+                      "tertiary-fixed-dim": "#ffb781",
+                      "surface": "#12131b",
+                      "surface-container": "#1e1f27",
+                      "on-surface-variant": "#c4c5d7",
+                      "on-background": "#e2e1ed",
+                      "background": "#12131b",
+                      "on-tertiary-fixed-variant": "#703800",
+                      "surface-container-lowest": "#0c0e15",
+                      "on-secondary-fixed": "#25005a",
+                      "tertiary-container": "#db7612",
+                      "outline": "#8e90a0",
+                      "outline-variant": "#444654",
+                      "on-secondary-fixed-variant": "#581ab8",
+                      "surface-container-highest": "#33343d",
+                      "primary-container": "#6c88ff",
+                      "secondary-fixed-dim": "#d2bbff",
+                      "surface-dim": "#12131b",
+                      "error": "#ffb4ab",
+                      "surface-variant": "#33343d",
+                      "primary-fixed-dim": "#b8c4ff",
+                      "on-secondary": "#3e008e",
+                      "surface-bright": "#383941",
+                      "on-tertiary": "#4e2500",
+                      "on-error-container": "#ffdad6",
+                      "on-primary-fixed-variant": "#0037ba",
+                      "on-surface": "#e2e1ed",
+                      "primary-fixed": "#dde1ff",
+                      "on-tertiary-fixed": "#301400",
+                      "on-error": "#690005",
+                      "surface-container-high": "#282932",
+                      "primary": "#b8c4ff",
+                      "inverse-surface": "#e2e1ed",
+                      "inverse-on-surface": "#2f3038",
+                      "on-secondary-container": "#c6aaff",
+                      "inverse-primary": "#2c51d4",
+                      "on-primary-container": "#001f75",
+                      "secondary-container": "#5a1eba",
+                      "error-container": "#93000a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "margin-desktop": "40px",
+                      "base": "8px",
+                      "xs": "4px",
+                      "xl": "32px",
+                      "lg": "24px",
+                      "md": "16px",
+                      "margin-mobile": "20px",
+                      "sm": "12px"
+              },
+              "fontFamily": {
+                      "label-md": ["Geist"],
+                      "body-sm": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "code-sm": ["Geist"],
+                      "body-md": ["Inter"],
+                      "headline-xl": ["Inter"]
+              },
+              "fontSize": {
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "code-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen">
+<!-- Top Navigation Anchor -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_32px_0_rgba(184,196,255,0.1)] flex items-center justify-between px-margin-mobile h-16">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a user with a clean, high-tech aesthetic, wearing a dark navy suit against a soft glowing blue background, representing a digital identity profile avatar for a cybersecurity professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIgSBQRFtb9fvYf90QVERl71IFHPsThtAzZtWgG4M-JVkL9FdY3gH-2oIsKEGY7vrUjuS5yZlV_QQbirfIP6W3QSs29r8zZJHa5nfNzL9nqlfrpodRSTND1nAnaFZ_lbOqXpFEZdXbSsCXVK-wsEowOupFwOruvGairLU-6rLkmMFQ-V_Uvx4GbjaPDxS4_4NO4djLFEo_8lz4OkIs6dBwIVaXrzhBsUlDAZM8VSDk9-TpvqGQ8FFEtc3GbZosSP3ANOyqBaG6OTE"/>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">KEEPER</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity active:scale-95 duration-200">search</button>
+</div>
+</header>
+<main class="pt-24 pb-32 px-margin-mobile max-w-4xl mx-auto space-y-xl">
+<!-- Hero Section: Security Score -->
+<section class="relative flex flex-col items-center justify-center py-xl">
+<div class="absolute inset-0 z-0 flex items-center justify-center opacity-20">
+<div class="w-64 h-64 bg-primary rounded-full blur-[80px] animate-pulse-ring"></div>
+</div>
+<div class="relative z-10 w-48 h-48 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" stroke-width="12"></circle>
+<circle class="text-primary transition-all duration-1000 ease-out" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" stroke-dasharray="552.92" stroke-dashoffset="11.05" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-xl text-headline-xl text-primary text-glow-primary">98%</span>
+<span class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant">Secure</span>
+</div>
+</div>
+<div class="mt-8 text-center space-y-md">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Security Posture: Optimal</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs mx-auto">Your digital vault is fortified. We detected 3 minor vulnerabilities that require your attention.</p>
+</div>
+<button class="mt-xl px-xl py-md bg-gradient-to-r from-primary to-secondary text-on-primary font-bold rounded-full shadow-[0_10px_30px_-5px_rgba(184,196,255,0.4)] hover:scale-105 active:scale-95 transition-all duration-300">
+                Run Security Audit
+            </button>
+</section>
+<!-- Dashboard: Password Analysis Bento Grid -->
+<section class="grid grid-cols-2 md:grid-cols-4 gap-md">
+<div class="glass-card col-span-2 p-lg rounded-lg flex flex-col justify-between">
+<div>
+<span class="material-symbols-outlined text-error text-[32px] mb-4">warning</span>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Password Health</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2">Analysis of 156 stored credentials.</p>
+</div>
+<div class="mt-lg flex items-end gap-1 h-12">
+<div class="flex-1 bg-error rounded-t-sm h-[80%]"></div>
+<div class="flex-1 bg-tertiary rounded-t-sm h-[40%]"></div>
+<div class="flex-1 bg-primary rounded-t-sm h-[100%]"></div>
+<div class="flex-1 bg-secondary rounded-t-sm h-[60%]"></div>
+</div>
+</div>
+<div class="glass-card p-lg rounded-lg flex flex-col items-center text-center">
+<span class="text-headline-xl font-headline-xl text-error">12</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase mt-1">Weak</span>
+</div>
+<div class="glass-card p-lg rounded-lg flex flex-col items-center text-center">
+<span class="text-headline-xl font-headline-xl text-tertiary">4</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase mt-1">Reused</span>
+</div>
+<div class="glass-card col-span-2 md:col-span-1 p-lg rounded-lg flex flex-col items-center justify-center border-error/30 bg-error/5">
+<span class="material-symbols-outlined text-error text-[24px]">gpp_maybe</span>
+<span class="text-headline-xl font-headline-xl text-error mt-2">1</span>
+<span class="font-label-md text-label-md text-error uppercase">Breached</span>
+</div>
+<div class="glass-card col-span-2 md:col-span-3 p-lg rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">encrypted</span>
+</div>
+<div>
+<h4 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Vault Encryption</h4>
+<p class="font-code-sm text-code-sm text-on-surface-variant">AES-256 Bit Protocol</p>
+</div>
+</div>
+<span class="px-3 py-1 bg-primary/20 text-primary rounded-full font-label-md text-label-md border border-primary/30">Verified</span>
+</div>
+</section>
+<!-- List: System Configuration -->
+<section class="space-y-md">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest pl-2">Security Hardening</h3>
+<div class="space-y-sm">
+<!-- Biometric -->
+<div class="glass-card p-md rounded-lg flex items-center justify-between hover:bg-surface-container-high transition-colors group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">fingerprint</span>
+<div>
+<p class="font-body-md text-body-md text-on-surface">Biometric Unlock</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">FaceID &amp; TouchID configured</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-primary font-label-md text-label-md">ENABLED</span>
+<div class="w-10 h-5 bg-primary/20 rounded-full relative border border-primary/40">
+<div class="absolute right-1 top-1 w-3 h-3 bg-primary rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- 2FA -->
+<div class="glass-card p-md rounded-lg flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">vibration</span>
+<div>
+<p class="font-body-md text-body-md text-on-surface">Two-Factor Auth</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Authenticator App active</p>
+</div>
+</div>
+<span class="text-primary font-label-md text-label-md">ENABLED</span>
+</div>
+<!-- Emergency Contact -->
+<div class="glass-card p-md rounded-lg flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">contact_emergency</span>
+<div>
+<p class="font-body-md text-body-md text-on-surface">Emergency Access</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Trusted contact not set</p>
+</div>
+</div>
+<button class="text-primary font-label-md text-label-md underline">SETUP</button>
+</div>
+</div>
+</section>
+<!-- Visualization Decor: Abstract Cyber Background -->
+<div class="fixed inset-0 -z-10 pointer-events-none">
+
+</div>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-40px)] max-w-md rounded-full bg-surface-container/60 backdrop-blur-2xl border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex justify-around items-center h-16 px-4 z-50">
+<a class="text-on-surface-variant p-3 hover:text-primary transition-colors active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">home</span>
+</a>
+<a class="bg-primary/20 text-primary rounded-full p-3 shadow-[0_0_15px_rgba(184,196,255,0.3)] active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">lock</span>
+</a>
+<a class="text-on-surface-variant p-3 hover:text-primary transition-colors active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">sync_alt</span>
+</a>
+<a class="text-on-surface-variant p-3 hover:text-primary transition-colors active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">settings</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions for buttons and list items
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-2px)';
+                card.style.transition = 'transform 0.3s ease';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Simulating the audit run interaction
+        const auditBtn = document.querySelector('button.bg-gradient-to-r');
+        auditBtn.addEventListener('click', () => {
+            const originalText = auditBtn.innerText;
+            auditBtn.innerText = 'Scanning...';
+            auditBtn.classList.add('opacity-70', 'pointer-events-none');
+            
+            setTimeout(() => {
+                auditBtn.innerText = 'System Secure';
+                auditBtn.classList.remove('from-primary', 'to-secondary');
+                auditBtn.classList.add('bg-primary');
+                
+                setTimeout(() => {
+                    auditBtn.innerText = originalText;
+                    auditBtn.classList.add('from-primary', 'to-secondary');
+                    auditBtn.classList.remove('bg-primary', 'opacity-70', 'pointer-events-none');
+                }, 2000);
+            }, 1500);
+        });
+    </script>
+</body></html>
