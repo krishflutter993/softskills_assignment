@@ -49,7 +49,7 @@ Lumina Quiz is a gamified study and quiz application built with Flutter. It help
    flutter build apk --split-per-abi
    ```
    This will generate:
-   - Release APK (ARM64): `build/app/outputs/flutter-apk/app-arm64-v8a-release.apk`
+   - Release APK (ARM64): ``
    - Release APK (ARMv7): `build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk`
    - Release APK (x86_64): `build/app/outputs/flutter-apk/app-x86_64-release.apk`
 
