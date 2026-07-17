@@ -116,7 +116,7 @@ class AppStateProvider extends ChangeNotifier {
     final savedThemes = prefs.getStringList('owned_themes_list') ?? ['assets/Theme/screen.png'];
     _ownedThemes = savedThemes.map((t) => t.replaceAll('assets/theme/', 'assets/Theme/')).toList();
 
-    _checkDailyStreak();
+    _checkDailyStreak(prefs);
     notifyListeners();
   }
 
@@ -143,8 +143,30 @@ class AppStateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _checkDailyStreak() {
-    _currentStreak++;
+  void _checkDailyStreak(SharedPreferences prefs) {
+    final today = DateTime.now();
+    final todayStr = today.toIso8601String().substring(0, 10);
+    final lastLoginStr = prefs.getString('last_login_date');
+
+    if (lastLoginStr == null) {
+      _currentStreak = 1;
+    } else {
+      final lastLogin = DateTime.tryParse(lastLoginStr);
+      if (lastLogin != null) {
+        final lastLoginDate = DateTime(lastLogin.year, lastLogin.month, lastLogin.day);
+        final todayDate = DateTime(today.year, today.month, today.day);
+        final difference = todayDate.difference(lastLoginDate).inDays;
+
+        if (difference == 1) {
+          _currentStreak += 1;
+        } else if (difference > 1) {
+          _currentStreak = 1;
+        }
+      } else {
+        _currentStreak = 1;
+      }
+    }
+    prefs.setString('last_login_date', todayStr);
     saveState();
   }
 
