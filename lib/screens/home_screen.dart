@@ -467,7 +467,7 @@ class HomeScreen extends StatelessWidget {
                     if (success && context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('🎉 30 Diamonds Claimed Successfully!'),
+                          content: Text('🎉 50 Coins Claimed Successfully!'),
                           backgroundColor: Colors.green,
                         ),
                       );
@@ -482,7 +482,7 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             ),
             child: Text(
-              claimed ? 'Claimed' : 'Claim 30 💎',
+              claimed ? 'Claimed' : 'Claim 50 🪙',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),

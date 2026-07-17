@@ -91,6 +91,13 @@ class DatabaseHelper {
         try { await db.execute("ALTER TABLE characters ADD COLUMN description TEXT"); } catch (_) {}
         try { await db.execute("ALTER TABLE characters ADD COLUMN rarity TEXT DEFAULT 'Common'"); } catch (_) {}
         try { await db.execute("ALTER TABLE user_characters ADD COLUMN createdAt TEXT"); } catch (_) {}
+        
+        // Add weekly leaderboard columns to Users table dynamically
+        try { await db.execute("ALTER TABLE Users ADD COLUMN weekly_score INTEGER DEFAULT 0"); } catch (_) {}
+        try { await db.execute("ALTER TABLE Users ADD COLUMN last_reward_week TEXT DEFAULT ''"); } catch (_) {}
+        try { await db.execute("ALTER TABLE Users ADD COLUMN diamonds INTEGER DEFAULT 0"); } catch (_) {}
+        try { await db.execute("ALTER TABLE Users ADD COLUMN weekly_rank INTEGER DEFAULT 0"); } catch (_) {}
+        try { await db.execute("ALTER TABLE Users ADD COLUMN reward_claimed INTEGER DEFAULT 0"); } catch (_) {}
       },
     );
   }
@@ -113,7 +120,12 @@ class DatabaseHelper {
         dailyStreak INTEGER DEFAULT 0,
         longestStreak INTEGER DEFAULT 0,
         quizScore INTEGER DEFAULT 0,
-        highestScore INTEGER DEFAULT 0
+        highestScore INTEGER DEFAULT 0,
+        weekly_score INTEGER DEFAULT 0,
+        last_reward_week TEXT DEFAULT '',
+        diamonds INTEGER DEFAULT 0,
+        weekly_rank INTEGER DEFAULT 0,
+        reward_claimed INTEGER DEFAULT 0
       )
     ''');
 

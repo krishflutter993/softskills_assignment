@@ -3,24 +3,40 @@ import 'package:provider/provider.dart';
 import 'package:rto_assmant/providers/app_state_provider.dart';
 import 'package:rto_assmant/widgets/glass_widgets.dart';
 import 'package:rto_assmant/widgets/character_showcase.dart';
+import 'package:rto_assmant/providers/countdown_provider.dart';
+import 'package:rto_assmant/services/leaderboard_service.dart';
 
-class LeaderboardScreen extends StatelessWidget {
+class LeaderboardScreen extends StatefulWidget {
   const LeaderboardScreen({super.key});
+
+  @override
+  State<LeaderboardScreen> createState() => _LeaderboardScreenState();
+}
+
+class _LeaderboardScreenState extends State<LeaderboardScreen> {
+  int _selectedTab = 0; // 0 for Weekly, 1 for Monthly
 
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AppStateProvider>();
     
-    // Generate mock players and inject the current user
-    final List<Map<String, dynamic>> allPlayers = [
-      {'name': 'Arjun', 'score': 2150, 'image': 'assets/images/owl.png', 'background': 'assets/Theme/screen.png', 'isCurrentUser': false},
-      {'name': 'Priya', 'score': 2100, 'image': 'assets/images/owl.png', 'background': 'assets/Theme/screen.png', 'isCurrentUser': false},
-      {'name': 'Rohan', 'score': 1950, 'image': 'assets/images/owl.png', 'background': 'assets/Theme/screen.png', 'isCurrentUser': false},
-      {'name': 'Sneha', 'score': 1700, 'image': 'assets/images/owl.png', 'background': 'assets/Theme/screen.png', 'isCurrentUser': false},
-      {'name': 'Karan', 'score': 1500, 'image': 'assets/images/owl.png', 'background': 'assets/Theme/screen.png', 'isCurrentUser': false},
-      {'name': 'Meera', 'score': 1200, 'image': 'assets/images/owl.png', 'background': 'assets/Theme/screen.png', 'isCurrentUser': false},
-      {'name': 'Player (You)', 'score': state.xp, 'image': state.equippedSkinImagePath, 'background': state.equippedCharacterBackground, 'isCurrentUser': true},
+    final List<Map<String, dynamic>> weeklyPlayers = LeaderboardService().calculateWeeklyLeaderboard(
+      currentUserWeeklyScore: state.weeklyScore,
+      equippedSkinPath: state.equippedSkinImagePath,
+      equippedBgPath: state.equippedCharacterBackground,
+    );
+
+    final List<Map<String, dynamic>> monthlyPlayers = [
+      {'name': 'Rohan', 'score': 8950, 'image': 'assets/images/owl.png', 'background': 'assets/Theme/screen.png', 'isCurrentUser': false},
+      {'name': 'Arjun', 'score': 8150, 'image': 'assets/images/owl.png', 'background': 'assets/Theme/screen.png', 'isCurrentUser': false},
+      {'name': 'Priya', 'score': 7800, 'image': 'assets/images/owl.png', 'background': 'assets/Theme/screen.png', 'isCurrentUser': false},
+      {'name': 'Sneha', 'score': 6700, 'image': 'assets/images/owl.png', 'background': 'assets/Theme/screen.png', 'isCurrentUser': false},
+      {'name': 'Karan', 'score': 5900, 'image': 'assets/images/owl.png', 'background': 'assets/Theme/screen.png', 'isCurrentUser': false},
+      {'name': 'Meera', 'score': 4500, 'image': 'assets/images/owl.png', 'background': 'assets/Theme/screen.png', 'isCurrentUser': false},
+      {'name': 'Player (You)', 'score': (state.weeklyScore * 4) + 120, 'image': state.equippedSkinImagePath, 'background': state.equippedCharacterBackground, 'isCurrentUser': true},
     ];
+
+    final List<Map<String, dynamic>> allPlayers = _selectedTab == 0 ? weeklyPlayers : monthlyPlayers;
     
     // Sort players by score descending
     allPlayers.sort((a, b) => (b['score'] as int).compareTo(a['score'] as int));
@@ -49,7 +65,7 @@ class LeaderboardScreen extends StatelessWidget {
                     const SizedBox(height: 30),
                     _buildList(allPlayers.skip(3).toList()),
                     const SizedBox(height: 20),
-                    _buildBonusCard(),
+                    _buildBonusCard(context, state),
                     const SizedBox(height: 100), // padding for bottom nav
                   ],
                 ),
@@ -113,31 +129,55 @@ class LeaderboardScreen extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF8A4FFF), Color(0xFF6A4C93)],
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedTab = 0;
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: _selectedTab == 0
+                        ? const LinearGradient(
+                            colors: [Color(0xFF8A4FFF), Color(0xFF6A4C93)],
+                          )
+                        : null,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                alignment: Alignment.center,
-                child: const Text(
-                  'Weekly',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Weekly',
+                    style: TextStyle(
+                      color: _selectedTab == 0 ? Colors.white : Colors.white54,
+                      fontWeight: _selectedTab == 0 ? FontWeight.bold : FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
             ),
             Expanded(
-              child: Container(
-                alignment: Alignment.center,
-                child: const Text(
-                  'Monthly',
-                  style: TextStyle(
-                    color: Colors.white54,
-                    fontWeight: FontWeight.w500,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedTab = 1;
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: _selectedTab == 1
+                        ? const LinearGradient(
+                            colors: [Color(0xFF8A4FFF), Color(0xFF6A4C93)],
+                          )
+                        : null,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Monthly',
+                    style: TextStyle(
+                      color: _selectedTab == 1 ? Colors.white : Colors.white54,
+                      fontWeight: _selectedTab == 1 ? FontWeight.bold : FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
@@ -363,45 +403,148 @@ class LeaderboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBonusCard() {
-    return GlassCard(
-      padding: const EdgeInsets.all(20),
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: Colors.cyan.withOpacity(0.3)),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Top 10 get bonus rewards!',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+  Widget _buildBonusCard(BuildContext context, AppStateProvider state) {
+    final countdown = context.watch<CountdownProvider>();
+    final userRank = LeaderboardService().calculateUserWeeklyRank(
+      currentUserWeeklyScore: state.weeklyScore,
+      equippedSkinPath: state.equippedSkinImagePath,
+      equippedBgPath: state.equippedCharacterBackground,
+    );
+    final isTop10 = userRank >= 1 && userRank <= 10;
+
+    return Column(
+      children: [
+        GlassCard(
+          padding: const EdgeInsets.all(20),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.cyan.withOpacity(0.3)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.emoji_events, color: Colors.amber, size: 24),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      '🏆 Top 10 players receive 💎100 Diamonds every week!',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'End of week: 2d 14h',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
-                    fontSize: 12,
+                ],
+              ),
+              const Divider(color: Colors.white24, height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        '⏳ Ends in:',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 13,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        countdown.formattedTime,
+                        style: const TextStyle(
+                          color: Colors.cyanAccent,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Courier',
+                        ),
+                      ),
+                    ],
                   ),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2A2346),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.card_giftcard, color: Colors.cyanAccent),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        GlassCard(
+          padding: const EdgeInsets.all(20),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: (isTop10 ? Colors.greenAccent : Colors.orangeAccent).withOpacity(0.3),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: isTop10
+                      ? [
+                          const Text(
+                            '🎉 Congratulations!',
+                            style: TextStyle(
+                              color: Colors.greenAccent,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'You finished #$userRank this week.',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text(
+                            '💎 +100 Diamonds added.',
+                            style: TextStyle(
+                              color: Colors.cyanAccent,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ]
+                      : [
+                          const Text(
+                            'Keep playing!',
+                            style: TextStyle(
+                              color: Colors.orangeAccent,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          const Text(
+                            'Reach Top 10 before the week ends.',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                 ),
-              ],
-            ),
+              ),
+              Icon(
+                isTop10 ? Icons.check_circle_outline : Icons.info_outline,
+                color: isTop10 ? Colors.greenAccent : Colors.orangeAccent,
+                size: 32,
+              ),
+            ],
           ),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: const Color(0xFF2A2346),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Icon(Icons.card_giftcard, color: Colors.cyanAccent),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

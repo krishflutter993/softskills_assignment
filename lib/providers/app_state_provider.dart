@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rto_assmant/models/quiz_result_model.dart';
 import 'package:rto_assmant/database/database_helper.dart';
 import 'package:rto_assmant/repositories/character_repository.dart';
+import 'package:rto_assmant/services/weekly_reset_service.dart';
 
 class AppStateProvider extends ChangeNotifier {
   int _coins = 0;
@@ -14,12 +15,31 @@ class AppStateProvider extends ChangeNotifier {
   int _currentStreak = 0;
   DateTime? _lastLoginDate;
   bool _isDailyBonusClaimed = false;
-  
+
   String _equippedOwlSkin = "forest_owl";
   List<String> _ownedOwlSkins = ["forest_owl"];
   List<QuizResult> _quizHistory = [];
-  List<String> _unlockedCategories = ["Science", "Math", "History", "Tech", "Art", "Music"];
+  List<String> _unlockedCategories = [
+    "Science",
+    "Math",
+    "History",
+    "Tech",
+    "Art",
+    "Music",
+  ];
   bool _isFirstLaunch = true;
+
+  int _weeklyScore = 0;
+  int _diamonds = 0;
+  int _weeklyRank = 0;
+  bool _rewardClaimed = false;
+  String _lastRewardWeek = "";
+
+  int get weeklyScore => _weeklyScore;
+  int get diamonds => _diamonds;
+  int get weeklyRank => _weeklyRank;
+  bool get rewardClaimed => _rewardClaimed;
+  String get lastRewardWeek => _lastRewardWeek;
 
   int get coins => _coins;
   int get gems => _gems;
@@ -37,11 +57,13 @@ class AppStateProvider extends ChangeNotifier {
 
   Map<String, dynamic>? _equippedCharacter;
   Map<String, dynamic>? get equippedCharacter => _equippedCharacter;
-  String get equippedCharacterImage => _equippedCharacter?['imagePath'] ?? 'assets/images/owl.png';
+  String get equippedCharacterImage =>
+      _equippedCharacter?['imagePath'] ?? 'assets/images/owl.png';
   String get equippedCharacterBackground {
     final bg = _equippedCharacter?['backgroundPath'] as String?;
     return (bg != null && bg.isNotEmpty) ? bg : 'assets/Theme/screen.png';
   }
+
   String _customBackground = 'assets/Theme/screen.png';
   String get customBackground => _customBackground;
   String get equippedBackground => _customBackground;
@@ -53,9 +75,14 @@ class AppStateProvider extends ChangeNotifier {
 
   Future<void> syncWithCharacterService() async {
     final db = await DatabaseHelper.instance.database;
-    final List<Map<String, dynamic>> skins = await db.query('user_characters', where: 'isPurchased = ?', whereArgs: [1]);
+    final List<Map<String, dynamic>> skins = await db.query(
+      'user_characters',
+      where: 'isPurchased = ?',
+      whereArgs: [1],
+    );
     _ownedOwlSkins = skins.map((s) => s['characterId'] as String).toList();
-    if (!_ownedOwlSkins.contains('forest_owl')) _ownedOwlSkins.add('forest_owl');
+    if (!_ownedOwlSkins.contains('forest_owl'))
+      _ownedOwlSkins.add('forest_owl');
 
     final repo = CharacterRepository(dbHelper: DatabaseHelper.instance);
     _characters = await repo.getAllCharacters();
@@ -65,7 +92,11 @@ class AppStateProvider extends ChangeNotifier {
       _equippedOwlSkin = _equippedCharacter!['id'] as String;
     } else {
       _equippedOwlSkin = 'forest_owl';
-      final List<Map<String, dynamic>> chars = await db.query('characters', where: 'id = ?', whereArgs: ['forest_owl']);
+      final List<Map<String, dynamic>> chars = await db.query(
+        'characters',
+        where: 'id = ?',
+        whereArgs: ['forest_owl'],
+      );
       if (chars.isNotEmpty) {
         _equippedCharacter = chars.first;
       }
@@ -75,13 +106,17 @@ class AppStateProvider extends ChangeNotifier {
 
   Future<void> loadState() async {
     final db = await DatabaseHelper.instance.database;
-    
+
     // Ensure default characters are populated
     final repo = CharacterRepository(dbHelper: DatabaseHelper.instance);
     await repo.initDefaultCharacters();
 
+    // Process weekly resets/rewards before loading state
+    final resetService = WeeklyResetService();
+    await resetService.checkAndProcessWeeklyReset();
+
     final List<Map<String, dynamic>> maps = await db.query('Users', limit: 1);
-    
+
     if (maps.isNotEmpty) {
       final user = maps.first;
       _coins = user['coins'] as int? ?? 0;
@@ -90,20 +125,33 @@ class AppStateProvider extends ChangeNotifier {
       _level = user['currentLevel'] as int? ?? 1;
       _currentStreak = user['dailyStreak'] as int? ?? 0;
       _equippedOwlSkin = user['selectedSkin'] as String? ?? 'default';
+      _weeklyScore = user['weekly_score'] as int? ?? 0;
+      _diamonds = user['diamonds'] as int? ?? 0;
+      _weeklyRank = user['weekly_rank'] as int? ?? 0;
+      _rewardClaimed = (user['reward_claimed'] as int? ?? 0) == 1;
+      _lastRewardWeek = user['last_reward_week'] as String? ?? '';
       _isFirstLaunch = false; // We have a user in DB, so not first launch
     }
 
     _updateRankTitle();
     await syncWithCharacterService();
-    
-    final List<Map<String, dynamic>> history = await db.query('QuizHistory', orderBy: 'timestamp DESC');
+
+    final List<Map<String, dynamic>> history = await db.query(
+      'QuizHistory',
+      orderBy: 'timestamp DESC',
+    );
     _quizHistory = history.map((h) {
       return QuizResult(
-        category: 'Mixed', // SQLite doesn't store category in history easily right now, mock it
+        category:
+            'Mixed', // SQLite doesn't store category in history easily right now, mock it
         score: h['score'] as int? ?? 0,
-        date: h['timestamp'] != null ? DateTime.parse(h['timestamp'] as String) : DateTime.now(),
+        date: h['timestamp'] != null
+            ? DateTime.parse(h['timestamp'] as String)
+            : DateTime.now(),
         correctCount: h['correctAnswers'] as int? ?? 0,
-        totalQuestions: ((h['correctAnswers'] as int? ?? 0) + (h['wrongAnswers'] as int? ?? 0)),
+        totalQuestions:
+            ((h['correctAnswers'] as int? ?? 0) +
+            (h['wrongAnswers'] as int? ?? 0)),
       );
     }).toList();
 
@@ -111,10 +159,14 @@ class AppStateProvider extends ChangeNotifier {
     final lastClaimedStr = prefs.getString('last_daily_bonus_claimed_date');
     final todayStr = DateTime.now().toIso8601String().substring(0, 10);
     _isDailyBonusClaimed = (lastClaimedStr == todayStr);
-    final savedBg = prefs.getString('custom_background_path') ?? 'assets/Theme/screen.png';
+    final savedBg =
+        prefs.getString('custom_background_path') ?? 'assets/Theme/screen.png';
     _customBackground = savedBg.replaceAll('assets/theme/', 'assets/Theme/');
-    final savedThemes = prefs.getStringList('owned_themes_list') ?? ['assets/Theme/screen.png'];
-    _ownedThemes = savedThemes.map((t) => t.replaceAll('assets/theme/', 'assets/Theme/')).toList();
+    final savedThemes =
+        prefs.getStringList('owned_themes_list') ?? ['assets/Theme/screen.png'];
+    _ownedThemes = savedThemes
+        .map((t) => t.replaceAll('assets/theme/', 'assets/Theme/'))
+        .toList();
 
     _checkDailyStreak(prefs);
     notifyListeners();
@@ -131,6 +183,11 @@ class AppStateProvider extends ChangeNotifier {
         'currentLevel': _level,
         'dailyStreak': _currentStreak,
         'selectedSkin': _equippedOwlSkin,
+        'weekly_score': _weeklyScore,
+        'diamonds': _diamonds,
+        'weekly_rank': _weeklyRank,
+        'reward_claimed': _rewardClaimed ? 1 : 0,
+        'last_reward_week': _lastRewardWeek,
       },
       where: 'id = ?',
       whereArgs: [1],
@@ -153,7 +210,11 @@ class AppStateProvider extends ChangeNotifier {
     } else {
       final lastLogin = DateTime.tryParse(lastLoginStr);
       if (lastLogin != null) {
-        final lastLoginDate = DateTime(lastLogin.year, lastLogin.month, lastLogin.day);
+        final lastLoginDate = DateTime(
+          lastLogin.year,
+          lastLogin.month,
+          lastLogin.day,
+        );
         final todayDate = DateTime(today.year, today.month, today.day);
         final difference = todayDate.difference(lastLoginDate).inDays;
 
@@ -200,10 +261,14 @@ class AppStateProvider extends ChangeNotifier {
   }
 
   void _updateRankTitle() {
-    if (_level < 5) _rankTitle = "Beginner";
-    else if (_level < 10) _rankTitle = "Focus Warrior";
-    else if (_level < 20) _rankTitle = "Master Owl";
-    else _rankTitle = "Legend";
+    if (_level < 5)
+      _rankTitle = "Beginner";
+    else if (_level < 10)
+      _rankTitle = "Focus Warrior";
+    else if (_level < 20)
+      _rankTitle = "Master Owl";
+    else
+      _rankTitle = "Legend";
   }
 
   Future<bool> purchaseSkin(String skinId, int price, String currency) async {
@@ -212,7 +277,8 @@ class AppStateProvider extends ChangeNotifier {
     if (currency == 'coins' && _coins >= price) {
       _coins -= price;
       _ownedOwlSkins.add(skinId);
-    } else if ((currency == 'gems' || currency == 'diamonds') && _gems >= price) {
+    } else if ((currency == 'gems' || currency == 'diamonds') &&
+        _gems >= price) {
       _gems -= price;
       _ownedOwlSkins.add(skinId);
     } else {
@@ -251,6 +317,11 @@ class AppStateProvider extends ChangeNotifier {
     _xp = 0;
     _level = 1;
     _equippedOwlSkin = 'forest_owl';
+    _weeklyScore = 0;
+    _diamonds = 0;
+    _weeklyRank = 0;
+    _rewardClaimed = false;
+    _lastRewardWeek = "";
     _updateRankTitle();
     await saveState();
     await syncWithCharacterService();
@@ -259,10 +330,15 @@ class AppStateProvider extends ChangeNotifier {
   Future<void> recordQuizResult(QuizResult result) async {
     _quizHistory.add(result);
     int earnedCoins = result.correctCount * 10;
-    int earnedXp = result.correctCount * 15 + (result.correctCount == result.totalQuestions ? 50 : 0);
-    
+    int earnedXp =
+        result.correctCount * 15 +
+        (result.correctCount == result.totalQuestions ? 50 : 0);
+
     addCoins(earnedCoins);
     addXp(earnedXp);
+    
+    _weeklyScore += earnedXp;
+    await saveState();
 
     final db = await DatabaseHelper.instance.database;
     await db.insert('QuizHistory', {
@@ -278,13 +354,13 @@ class AppStateProvider extends ChangeNotifier {
   Future<bool> claimDailyBonus() async {
     if (_isDailyBonusClaimed) return false;
     _isDailyBonusClaimed = true;
-    _gems += 30; // 30 gems/diamonds
+    _coins += 50; // 50 coins
     await saveState();
 
     final prefs = await SharedPreferences.getInstance();
     final todayStr = DateTime.now().toIso8601String().substring(0, 10);
     await prefs.setString('last_daily_bonus_claimed_date', todayStr);
-    
+
     notifyListeners();
     return true;
   }
@@ -296,13 +372,18 @@ class AppStateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> purchaseTheme(String themePath, int price, String currency) async {
+  Future<bool> purchaseTheme(
+    String themePath,
+    int price,
+    String currency,
+  ) async {
     if (_ownedThemes.contains(themePath)) return false;
 
     if (currency == 'coins' && _coins >= price) {
       _coins -= price;
       _ownedThemes.add(themePath);
-    } else if ((currency == 'gems' || currency == 'diamonds') && _gems >= price) {
+    } else if ((currency == 'gems' || currency == 'diamonds') &&
+        _gems >= price) {
       _gems -= price;
       _ownedThemes.add(themePath);
     } else {

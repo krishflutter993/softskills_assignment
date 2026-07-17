@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/app_state_provider.dart';
 import 'providers/theme_manager.dart';
+import 'providers/countdown_provider.dart';
 import 'database/database_helper.dart';
 import 'repositories/character_repository.dart';
 import 'services/character_service.dart';
@@ -27,6 +28,14 @@ class FocusBuddyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AppStateProvider()),
         ChangeNotifierProvider(create: (_) => ThemeManager()),
+        ChangeNotifierProvider(
+          create: (context) => CountdownProvider(
+            onWeekEndedCallback: () async {
+              final appState = Provider.of<AppStateProvider>(context, listen: false);
+              await appState.loadState();
+            },
+          ),
+        ),
         ChangeNotifierProvider(
           create: (context) => ShopProvider(
             characterService: CharacterService(
