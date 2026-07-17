@@ -1,6 +1,6 @@
 {
-    "name": "keeper",
-    "short_name": "keeper",
+    "name": "rto_assmant",
+    "short_name": "rto_assmant",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

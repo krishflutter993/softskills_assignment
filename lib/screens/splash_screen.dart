@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:keeper_app/screens/onboarding_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../utils/colors.dart';
-import 'dart:ui';
+import 'package:provider/provider.dart';
+import 'package:rto_assmant/providers/app_state_provider.dart';
+import 'package:rto_assmant/providers/theme_manager.dart';
+import 'package:rto_assmant/widgets/glass_widgets.dart';
+import 'package:rto_assmant/widgets/character_showcase.dart';
+import 'onboarding_screen.dart';
+import 'main_layout.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,7 +17,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
-  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
@@ -24,17 +25,56 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       vsync: this,
       duration: const Duration(seconds: 2),
     );
-    
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: const Interval(0.0, 0.8, curve: Curves.easeOut)),
-    );
-    
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: const Interval(0.0, 0.8, curve: Curves.easeOut)),
-    );
-    
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
     _controller.forward();
-    _navigateToNextScreen();
+    
+    _loadStateAndNavigate();
+  }
+
+  Future<void> _loadStateAndNavigate() async {
+    debugPrint("Initializing app load process...");
+    final appState = Provider.of<AppStateProvider>(context, listen: false);
+    final themeManager = Provider.of<ThemeManager>(context, listen: false);
+    
+    try {
+      debugPrint("Initializing Database...");
+      debugPrint("Loading Preferences...");
+      debugPrint("Importing Questions...");
+      debugPrint("Loading Character Data...");
+      await appState.loadState().timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          debugPrint("Initialization Timeout: Database/App State load took longer than 5 seconds. Skipping...");
+        },
+      );
+      await themeManager.loadTheme();
+      debugPrint("Database Initialized");
+      debugPrint("Preferences and Themes Loaded");
+      debugPrint("Questions Imported");
+      debugPrint("Character Loaded");
+      debugPrint("Initialization Completed");
+    } catch (e) {
+      debugPrint("Error loading database/app state/theme: $e");
+    }
+
+    debugPrint("Waiting for minimum splash screen duration...");
+    try {
+      await Future.delayed(const Duration(seconds: 2));
+      debugPrint("Finished splash screen delay");
+    } catch (e) {
+      debugPrint("Error during delay: $e");
+    }
+
+    if (mounted) {
+      debugPrint("Navigating to next screen...");
+      if (appState.isFirstLaunch) {
+        debugPrint("Navigating to Onboarding...");
+        Navigator.pushReplacementNamed(context, '/onboarding');
+      } else {
+        debugPrint("Navigating to Home...");
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    }
   }
 
   @override
@@ -43,168 +83,158 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     super.dispose();
   }
 
-  Future<void> _navigateToNextScreen() async {
-    await Future.delayed(const Duration(milliseconds: 3000));
-    if (!mounted) return;
-    
-    final prefs = await SharedPreferences.getInstance();
-    final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    final hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
-    
-    if (isLoggedIn) {
-      Navigator.pushReplacementNamed(context, '/dashboard');
-    } else if (hasSeenOnboarding) {
-      Navigator.pushReplacementNamed(context, '/login');
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final appState = Provider.of<AppStateProvider>(context);
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: AppColors.backgroundGradient,
-        ),
-        child: Stack(
+      backgroundColor: Colors.transparent,
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Background glowing orbs
-            Positioned(
-              top: -100,
-              left: -100,
+            const SizedBox(height: 40),
+            // Main Image
+            Center(
               child: Container(
-                width: 300,
+                width: 200,
                 height: 300,
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.primary.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF9B65E6).withOpacity(0.3),
+                      blurRadius: 30,
+                      spreadRadius: 5,
+                    ),
+                  ],
                 ),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
-                  child: Container(color: Colors.transparent),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: -150,
-              right: -50,
-              child: Container(
-                width: 400,
-                height: 400,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.accent.withOpacity(0.15),
-                ),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
-                  child: Container(color: Colors.transparent),
+                child: CharacterShowcase(
+                  imagePath: appState.equippedSkinImagePath,
+                  width: 200,
+                  height: 300,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(16),
                 ),
               ),
             ),
-            // Main content
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: ScaleTransition(
-                      scale: _scaleAnimation,
-                      child: Stack(
-                        alignment: Alignment.center,
+            const SizedBox(height: 40),
+            // App Name
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Focus ',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: -1.0,
+                  ),
+                ),
+                Text(
+                  'Buddy',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.w900,
+                    color: const Color(0xFFB19CD9), // Light purple
+                    shadows: [
+                      Shadow(
+                        color: const Color(0xFFB19CD9).withOpacity(0.8),
+                        blurRadius: 15,
+                      ),
+                    ],
+                    letterSpacing: -1.0,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            // Subtitle
+            Text(
+              'Level up your brain. Beat the quiz!',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white.withOpacity(0.7),
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            const Spacer(),
+            // Loading Indicator
+            const CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6C5791)),
+              strokeWidth: 3,
+            ),
+            const SizedBox(height: 24),
+            // Loading Text
+            Text(
+              'PREPARING YOUR JOURNEY...',
+              style: TextStyle(
+                fontSize: 13,
+                letterSpacing: 2.0,
+                color: Colors.white.withOpacity(0.8),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 40),
+            // Daily Pro Tip Card
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: GlassCard(
+                padding: const EdgeInsets.all(20),
+                borderRadius: BorderRadius.circular(16),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD6285A),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFD6285A).withOpacity(0.5),
+                            blurRadius: 15,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.lightbulb_outline,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            width: 100,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.primary.withOpacity(0.4),
-                                  blurRadius: 40,
-                                  spreadRadius: 10,
-                                ),
-                              ],
+                          const Text(
+                            'DAILY PRO TIP',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFFE594A5),
+                              letterSpacing: 1.0,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Icon(
-                            Icons.shield_outlined,
-                            size: 100,
-                            color: AppColors.textPrimary,
-                          ),
-                          Icon(
-                            Icons.key,
-                            size: 40,
-                            color: AppColors.primary,
+                          const SizedBox(height: 4),
+                          Text(
+                            "Streaks double your rewards.\nDon't break the chain!",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white.withOpacity(0.9),
+                              height: 1.4,
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 32),
-                  FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: Column(
-                      children: [
-                        Text(
-                          'KEEPER',
-                          style: GoogleFonts.outfit(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.textPrimary,
-                            letterSpacing: 4,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Secure your digital life.',
-                          style: GoogleFonts.outfit(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.textSecondary,
-                            letterSpacing: 1,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'End-to-end encryption for maximum security',
-                          style: GoogleFonts.outfit(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w300,
-                            color: AppColors.textMuted,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 60),
-                  FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceLight.withOpacity(0.3),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: AppColors.primary.withOpacity(0.3),
-                        ),
-                      ),
-                      child: const CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                        strokeWidth: 2,
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
+            const SizedBox(height: 40),
           ],
         ),
       ),

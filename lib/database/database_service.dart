@@ -1,123 +1,91 @@
 import 'package:sqflite/sqflite.dart';
-import '../models/vault_item.dart';
-import '../models/category.dart';
+import 'package:rto_assmant/models/user_model.dart';
+import 'package:rto_assmant/models/question_model.dart';
 import 'database_helper.dart';
 
 class DatabaseService {
   final DatabaseHelper _dbHelper = DatabaseHelper.instance;
 
-  // --- Vault Items CRUD ---
-
-  Future<VaultItem> createItem(VaultItem item) async {
+  // --- USER OPERATIONS ---
+  
+  Future<int> insertUser(UserModel user) async {
     final db = await _dbHelper.database;
-    await db.insert(
-      'vault_items',
-      item.toMap(),
+    return await db.insert(
+      'Users',
+      user.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    return item;
   }
 
-  Future<VaultItem?> readItem(String id) async {
+  Future<UserModel?> getUser(int id) async {
     final db = await _dbHelper.database;
-    final maps = await db.query(
-      'vault_items',
-      columns: ['id', 'title', 'username', 'email', 'password', 'website', 'notes', 'category', 'favorite', 'createdAt', 'updatedAt'],
+    final List<Map<String, dynamic>> maps = await db.query(
+      'Users',
       where: 'id = ?',
       whereArgs: [id],
     );
 
     if (maps.isNotEmpty) {
-      return VaultItem.fromMap(maps.first);
-    } else {
-      return null;
+      return UserModel.fromMap(maps.first);
     }
-  }
-
-  Future<List<VaultItem>> readAllItems({String? category, bool? favorite, String? query, String? sortBy}) async {
-    final db = await _dbHelper.database;
-    
-    String whereClause = '';
-    List<dynamic> whereArgs = [];
-    
-    if (category != null && category.isNotEmpty) {
-      whereClause += 'category = ?';
-      whereArgs.add(category);
-    }
-    
-    if (favorite != null) {
-      if (whereClause.isNotEmpty) whereClause += ' AND ';
-      whereClause += 'favorite = ?';
-      whereArgs.add(favorite ? 1 : 0);
-    }
-    
-    if (query != null && query.isNotEmpty) {
-      if (whereClause.isNotEmpty) whereClause += ' AND ';
-      whereClause += '(title LIKE ? OR username LIKE ? OR website LIKE ?)';
-      whereArgs.addAll(['%$query%', '%$query%', '%$query%']);
-    }
-    
-    String orderBy = 'createdAt DESC';
-    if (sortBy == 'title') {
-      orderBy = 'title ASC';
-    } else if (sortBy == 'updatedAt') {
-      orderBy = 'updatedAt DESC';
-    }
-
-    final result = await db.query(
-      'vault_items',
-      where: whereClause.isEmpty ? null : whereClause,
-      whereArgs: whereArgs.isEmpty ? null : whereArgs,
-      orderBy: orderBy,
-    );
-    
-    return result.map((map) => VaultItem.fromMap(map)).toList();
-  }
-
-  Future<int> updateItem(VaultItem item) async {
-    final db = await _dbHelper.database;
-    return db.update(
-      'vault_items',
-      item.toMap(),
-      where: 'id = ?',
-      whereArgs: [item.id],
-    );
-  }
-
-  Future<int> deleteItem(String id) async {
-    final db = await _dbHelper.database;
-    return await db.delete(
-      'vault_items',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return null;
   }
   
-  Future<int> toggleFavorite(String id, bool isFavorite) async {
+  Future<UserModel?> getFirstUser() async {
     final db = await _dbHelper.database;
-    return db.update(
-      'vault_items',
-      {'favorite': isFavorite ? 1 : 0, 'updatedAt': DateTime.now().toIso8601String()},
+    final List<Map<String, dynamic>> maps = await db.query(
+      'Users',
+      limit: 1,
+    );
+
+    if (maps.isNotEmpty) {
+      return UserModel.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  Future<int> updateUser(UserModel user) async {
+    final db = await _dbHelper.database;
+    return await db.update(
+      'Users',
+      user.toMap(),
       where: 'id = ?',
-      whereArgs: [id],
+      whereArgs: [user.id],
     );
   }
 
-  // --- Categories CRUD ---
+  // --- QUESTION OPERATIONS ---
 
-  Future<ItemCategory> createCategory(ItemCategory category) async {
+  Future<void> insertQuestions(List<QuestionModel> questions) async {
     final db = await _dbHelper.database;
-    await db.insert(
-      'categories',
-      category.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-    return category;
+    Batch batch = db.batch();
+    for (var q in questions) {
+      batch.insert(
+        'Questions',
+        q.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.ignore,
+      );
+    }
+    await batch.commit(noResult: true);
   }
 
-  Future<List<ItemCategory>> readAllCategories() async {
+  Future<int> getQuestionsCount() async {
     final db = await _dbHelper.database;
-    final result = await db.query('categories', orderBy: 'name ASC');
-    return result.map((map) => ItemCategory.fromMap(map)).toList();
+    final result = await db.rawQuery('SELECT COUNT(*) FROM Questions');
+    int count = Sqflite.firstIntValue(result) ?? 0;
+    return count;
+  }
+
+  Future<List<QuestionModel>> getQuestionsByCategory(int categoryId) async {
+    final db = await _dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'Questions',
+      where: 'categoryId = ?',
+      whereArgs: [categoryId],
+    );
+
+    return List.generate(maps.length, (i) {
+      return QuestionModel.fromMap(maps[i]);
+    });
   }
 }
