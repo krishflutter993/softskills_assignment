@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rto_assmant/providers/app_state_provider.dart';
 import 'package:rto_assmant/widgets/glass_widgets.dart';
 import 'package:rto_assmant/widgets/character_showcase.dart';
+import 'package:rto_assmant/l10n/app_localizations.dart';
 import 'quiz_completed_screen.dart';
 import 'level_up_screen.dart';
 
@@ -23,7 +24,7 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
-                    _buildHeader(appState),
+                    _buildHeader(context, appState),
                     const SizedBox(height: 30),
                     _buildLevelCard(context, appState),
                     const SizedBox(height: 30),
@@ -43,7 +44,8 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(AppStateProvider appState) {
+  Widget _buildHeader(BuildContext context, AppStateProvider appState) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         Stack(
@@ -84,7 +86,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Hello, Player!',
+                l10n.helloPlayer,
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.6),
                   fontSize: 14,
@@ -92,9 +94,9 @@ class HomeScreen extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const Text(
-                'Let\'s Play & Learn!',
-                style: TextStyle(
+              Text(
+                l10n.letsPlayAndLearn,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

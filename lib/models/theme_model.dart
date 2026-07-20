@@ -49,16 +49,16 @@ class ThemeModel {
       id: 'lavender_mist',
       name: 'Lavender Mist',
       image: 'assets/Theme/screen copy 4.png',
-      price: 210,
-      currency: 'coins',
+      price: 30,
+      currency: 'diamonds',
     ),
 
     ThemeModel(
       id: 'cosmic_night',
       name: 'Cosmic Night',
       image: 'assets/Theme/screen copy 5.png',
-      price: 560,
-      currency: 'coins',
+      price: 46,
+      currency: 'diamonds',
     ),
 
     ThemeModel(
@@ -94,19 +94,18 @@ class ThemeModel {
     ),
 
     ThemeModel(
-      id: 'pink_satin',
-      name: 'Pink Satin',
-      image: 'assets/Theme/screen copy 10.png',
-      price: 1000,
-      currency: 'coins',
-    ),
-
-    ThemeModel(
       id: 'obsidian_gold',
       name: 'Obsidian Gold',
       image: 'assets/Theme/screen copy 11.png',
       price: 1650,
       currency: 'coins',
+    ),
+    ThemeModel(
+      id: 'pink_satin',
+      name: 'Pink Satin',
+      image: 'assets/Theme/screen copy 10.png',
+      price: 89,
+      currency: 'diamonds',
     ),
 
     // --- DIAMOND THEMES FIRST ---
@@ -131,6 +130,14 @@ class ThemeModel {
       name: 'Emerald Palace',
       image: 'assets/Theme/screen copy 16.png',
       price: 65,
+      currency: 'diamonds',
+    ),
+
+    ThemeModel(
+      id: 'obsidian_gold',
+      name: 'Obsidian Gold',
+      image: 'assets/Theme/screen copy 11.png',
+      price: 97,
       currency: 'diamonds',
     ),
 

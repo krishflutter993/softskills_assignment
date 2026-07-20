@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:rto_assmant/providers/app_state_provider.dart';
 import 'package:rto_assmant/widgets/glass_card.dart';
 import 'package:rto_assmant/widgets/character_showcase.dart';
+import 'package:rto_assmant/services/audio_service.dart';
 
 class QuizPlayingScreen extends StatefulWidget {
   final String category;
@@ -86,8 +87,10 @@ class _QuizPlayingScreenState extends State<QuizPlayingScreen> {
       if (isCorrect) {
         _correctCount++;
         _owlMood = 'happy';
+        AudioService.instance.playSoundEffect('correct');
       } else {
         _owlMood = 'sad';
+        AudioService.instance.playSoundEffect('wrong');
       }
     });
     

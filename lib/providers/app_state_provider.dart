@@ -5,6 +5,7 @@ import 'package:rto_assmant/models/quiz_result_model.dart';
 import 'package:rto_assmant/database/database_helper.dart';
 import 'package:rto_assmant/repositories/character_repository.dart';
 import 'package:rto_assmant/services/weekly_reset_service.dart';
+import 'package:rto_assmant/services/audio_service.dart';
 
 class AppStateProvider extends ChangeNotifier {
   int _coins = 0;
@@ -307,11 +308,16 @@ class AppStateProvider extends ChangeNotifier {
 
   void _checkLevelUp() {
     int requiredXp = _level * 100;
+    bool leveledUp = false;
     while (_xp >= requiredXp) {
       _xp -= requiredXp;
       _level++;
       _updateRankTitle();
       requiredXp = _level * 100;
+      leveledUp = true;
+    }
+    if (leveledUp) {
+      AudioService.instance.playSoundEffect('levelUp');
     }
   }
 
@@ -349,6 +355,7 @@ class AppStateProvider extends ChangeNotifier {
     final repo = CharacterRepository(dbHelper: DatabaseHelper.instance);
     await repo.purchaseCharacter(skinId);
 
+    AudioService.instance.playSoundEffect('purchase');
     await saveState();
     await syncWithCharacterService();
     return true;
@@ -365,8 +372,7 @@ class AppStateProvider extends ChangeNotifier {
   }
 
   Future<void> resetProgress() async {
-    final repo = CharacterRepository(dbHelper: DatabaseHelper.instance);
-    await repo.resetProgress();
+    await DatabaseHelper.instance.resetDatabase();
     _coins = 100;
     _gems = 10;
     _xp = 0;
@@ -377,9 +383,10 @@ class AppStateProvider extends ChangeNotifier {
     _weeklyRank = 0;
     _rewardClaimed = false;
     _lastRewardWeek = "";
+    _quizHistory.clear();
     _updateRankTitle();
-    await saveState();
     await syncWithCharacterService();
+    notifyListeners();
   }
 
   Future<void> recordQuizResult(QuizResult result) async {
@@ -410,6 +417,7 @@ class AppStateProvider extends ChangeNotifier {
     if (_isDailyBonusClaimed) return false;
     _isDailyBonusClaimed = true;
     _coins += 50; // 50 coins
+    AudioService.instance.playSoundEffect('reward');
     await saveState();
 
     final prefs = await SharedPreferences.getInstance();
@@ -447,6 +455,7 @@ class AppStateProvider extends ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('owned_themes_list', _ownedThemes);
+    AudioService.instance.playSoundEffect('purchase');
     await saveState();
     notifyListeners();
     return true;

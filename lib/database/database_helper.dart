@@ -260,4 +260,49 @@ class DatabaseHelper {
       VALUES (1, 1, 1, 1, 'en')
     ''');
   }
+  Future<void> resetDatabase() async {
+    final db = await database;
+    await db.transaction((txn) async {
+      await txn.delete('QuizHistory');
+      await txn.delete('UserAnswers');
+      await txn.delete('CharacterSkins');
+      await txn.delete('user_characters');
+      
+      // Re-insert default equipped character
+      await txn.insert('user_characters', {
+        'characterId': 'forest_owl',
+        'isPurchased': 1,
+        'isEquipped': 1,
+        'createdAt': DateTime.now().toIso8601String(),
+      });
+
+      // Reset the default user
+      await txn.update(
+        'Users',
+        {
+          'name': 'Focus Warrior',
+          'email': null,
+          'avatar': null,
+          'coins': 100,
+          'gems': 10,
+          'xp': 0,
+          'currentLevel': 1,
+          'highestLevel': 1,
+          'selectedCharacter': 'owl',
+          'selectedSkin': 'default',
+          'dailyStreak': 0,
+          'longestStreak': 0,
+          'quizScore': 0,
+          'highestScore': 0,
+          'weekly_score': 0,
+          'last_reward_week': '',
+          'diamonds': 0,
+          'weekly_rank': 0,
+          'reward_claimed': 0,
+        },
+        where: 'id = ?',
+        whereArgs: [1],
+      );
+    });
+  }
 }

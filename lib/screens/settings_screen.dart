@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rto_assmant/providers/app_state_provider.dart';
+import 'package:rto_assmant/providers/settings_provider.dart';
 import 'package:rto_assmant/widgets/glass_widgets.dart';
+import 'package:rto_assmant/l10n/app_localizations.dart';
+import 'package:rto_assmant/services/audio_service.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<AppStateProvider>();
+    final appState = context.watch<AppStateProvider>();
+    final settings = context.watch<SettingsProvider>();
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.transparent, // Displays the custom theme background
       appBar: AppBar(
-        title: const Text(
-          'Settings',
-          style: TextStyle(
+        title: Text(
+          l10n.settings,
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 22,
@@ -33,7 +38,7 @@ class SettingsScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
           child: Column(
             children: [
-              _buildSectionTitle('Preferences'),
+              _buildSectionTitle(l10n.preferences),
               const SizedBox(height: 12),
               GlassCard(
                 padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -41,24 +46,40 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     _buildSwitchTile(
                       icon: Icons.dark_mode_outlined,
-                      title: 'Dark Mode',
-                      subtitle: 'Optimize interface brightness',
-                      value: state.darkMode,
-                      onChanged: (val) => state.updateSetting('darkMode', val),
+                      title: l10n.darkMode,
+                      subtitle: l10n.darkModeSub,
+                      value: settings.darkMode,
+                      onChanged: (val) async {
+                        AudioService.instance.playSoundEffect('click');
+                        final success = await settings.setDarkMode(val);
+                        if (!success && context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Failed to save settings'), backgroundColor: Colors.red),
+                          );
+                        }
+                      },
                     ),
                     const Divider(color: Colors.white10),
                     _buildSwitchTile(
                       icon: Icons.notifications_none_outlined,
-                      title: 'Notifications',
-                      subtitle: 'Weekly leaderboard and reset alerts',
-                      value: state.notifications,
-                      onChanged: (val) => state.updateSetting('notifications', val),
+                      title: l10n.notifications,
+                      subtitle: l10n.notificationsSub,
+                      value: settings.notifications,
+                      onChanged: (val) async {
+                        AudioService.instance.playSoundEffect('click');
+                        final success = await settings.setNotifications(val);
+                        if (!success && context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Failed to save settings'), backgroundColor: Colors.red),
+                          );
+                        }
+                      },
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
-              _buildSectionTitle('Audio'),
+              _buildSectionTitle(l10n.audio),
               const SizedBox(height: 12),
               GlassCard(
                 padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -66,24 +87,40 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     _buildSwitchTile(
                       icon: Icons.music_note_outlined,
-                      title: 'Background Music',
-                      subtitle: 'Ambient soundtrack during gameplay',
-                      value: state.music,
-                      onChanged: (val) => state.updateSetting('music', val),
+                      title: l10n.backgroundMusic,
+                      subtitle: l10n.backgroundMusicSub,
+                      value: settings.music,
+                      onChanged: (val) async {
+                        AudioService.instance.playSoundEffect('click');
+                        final success = await settings.setMusic(val);
+                        if (!success && context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Failed to save settings'), backgroundColor: Colors.red),
+                          );
+                        }
+                      },
                     ),
                     const Divider(color: Colors.white10),
                     _buildSwitchTile(
                       icon: Icons.volume_up_outlined,
-                      title: 'Sound Effects',
-                      subtitle: 'Keypress and level up audios',
-                      value: state.sound,
-                      onChanged: (val) => state.updateSetting('sound', val),
+                      title: l10n.soundEffects,
+                      subtitle: l10n.soundEffectsSub,
+                      value: settings.sound,
+                      onChanged: (val) async {
+                        AudioService.instance.playSoundEffect('click');
+                        final success = await settings.setSound(val);
+                        if (!success && context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Failed to save settings'), backgroundColor: Colors.red),
+                          );
+                        }
+                      },
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
-              _buildSectionTitle('Language & Account'),
+              _buildSectionTitle(l10n.languageAndAccount),
               const SizedBox(height: 12),
               GlassCard(
                 padding: const EdgeInsets.all(16.0),
@@ -91,16 +128,22 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     _buildDropdownTile(
                       icon: Icons.translate,
-                      title: 'Language',
-                      value: state.language,
+                      title: l10n.language,
+                      value: settings.language,
                       items: const [
                         DropdownMenuItem(value: 'en', child: Text('English', style: TextStyle(color: Colors.white))),
                         DropdownMenuItem(value: 'hi', child: Text('Hindi (हिंदी)', style: TextStyle(color: Colors.white))),
                         DropdownMenuItem(value: 'es', child: Text('Spanish (Español)', style: TextStyle(color: Colors.white))),
                       ],
-                      onChanged: (val) {
+                      onChanged: (val) async {
                         if (val != null) {
-                          state.updateSetting('language', val);
+                          AudioService.instance.playSoundEffect('click');
+                          final success = await settings.setLanguage(val);
+                          if (!success && context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Failed to save settings'), backgroundColor: Colors.red),
+                            );
+                          }
                         }
                       },
                     ),
@@ -108,7 +151,7 @@ class SettingsScreen extends StatelessWidget {
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: const Icon(Icons.info_outline, color: Color(0xFFD1C4E9)),
-                      title: const Text('App Version', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+                      title: Text(l10n.appVersion, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
                       trailing: const Text('v1.0.0', style: TextStyle(color: Colors.white70)),
                     ),
                   ],
@@ -127,8 +170,8 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 ),
                 icon: const Icon(Icons.delete_forever_outlined),
-                label: const Text('Reset Game Progress', style: TextStyle(fontWeight: FontWeight.bold)),
-                onPressed: () => _showResetConfirmationDialog(context, state),
+                label: Text(l10n.resetProgress, style: const TextStyle(fontWeight: FontWeight.bold)),
+                onPressed: () => _showResetConfirmationDialog(context, appState, settings),
               ),
             ],
           ),
@@ -198,7 +241,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  void _showResetConfirmationDialog(BuildContext context, AppStateProvider state) {
+  void _showResetConfirmationDialog(BuildContext context, AppStateProvider appState, SettingsProvider settings) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -231,14 +274,27 @@ class SettingsScreen extends StatelessWidget {
               ),
               onPressed: () async {
                 Navigator.of(context).pop();
-                await state.resetProgress();
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('🎉 Game progress has been reset successfully!'),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
+                try {
+                  await appState.resetProgress();
+                  await settings.resetSettings();
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('🎉 Game progress has been reset successfully!'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                    Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Error resetting progress: $e'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 }
               },
               child: const Text('Reset', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
