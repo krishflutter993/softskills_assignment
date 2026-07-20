@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/images/avatar.png" alt="Lumina Quiz Logo" width="120" height="120" />
+  <img src="assets/images/app_icon.png" alt="Lumina Quiz Logo" width="120" height="120" />
 </p>
 
 <h1 align="center">Lumina Quiz</h1>
