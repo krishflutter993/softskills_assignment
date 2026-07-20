@@ -39,7 +39,8 @@ class RewardService {
     final currentGems = user['gems'] as int? ?? 0;
 
     // Check if reward was already processed/distributed for this week
-    if (lastRewardWeek == weekStr) {
+    final currentWeekStr = getIsoWeekString(DateTime.now());
+    if (lastRewardWeek == currentWeekStr) {
       return {
         'rewarded': false,
         'rank': user['weekly_rank'] as int? ?? 0,

@@ -14,7 +14,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
 
@@ -27,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     );
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
     _controller.forward();
-    
+
     _loadStateAndNavigate();
   }
 
@@ -35,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     debugPrint("Initializing app load process...");
     final appState = Provider.of<AppStateProvider>(context, listen: false);
     final themeManager = Provider.of<ThemeManager>(context, listen: false);
-    
+
     try {
       debugPrint("Initializing Database...");
       debugPrint("Loading Preferences...");
@@ -44,7 +45,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       await appState.loadState().timeout(
         const Duration(seconds: 5),
         onTimeout: () {
-          debugPrint("Initialization Timeout: Database/App State load took longer than 5 seconds. Skipping...");
+          debugPrint(
+            "Initialization Timeout: Database/App State load took longer than 5 seconds. Skipping...",
+          );
         },
       );
       await themeManager.loadTheme();
@@ -110,7 +113,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   ],
                 ),
                 child: CharacterShowcase(
-                  imagePath: appState.equippedSkinImagePath,
+                  imagePath: 'assets/images/owl.png',
                   width: 200,
                   height: 300,
                   shape: BoxShape.rectangle,

@@ -19,7 +19,7 @@ class ProfileScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 16),
-                _buildHeader(),
+                _buildHeader(context),
                 const SizedBox(height: 24),
                 _buildBanner(),
                 const SizedBox(height: 16),
@@ -41,18 +41,10 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: const BoxDecoration(
-            color: Color(0xFF1A1629),
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 16),
-        ),
         const Text(
           'Profile',
           style: TextStyle(
@@ -61,13 +53,18 @@ class ProfileScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: const BoxDecoration(
-            color: Color(0xFF1A1629),
-            shape: BoxShape.circle,
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed('/settings');
+          },
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: const BoxDecoration(
+              color: Color(0xFF1A1629),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.settings_outlined, color: Colors.white, size: 20),
           ),
-          child: const Icon(Icons.settings_outlined, color: Colors.white, size: 20),
         ),
       ],
     );
@@ -106,12 +103,15 @@ class ProfileScreen extends StatelessWidget {
           border: Border.all(color: const Color(0xFF6A4C93), width: 3),
         ),
         const SizedBox(height: 16),
-        const Text(
-          'Player', // Using a default since we don't prompt for name yet
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
+        GestureDetector(
+          onTap: () => _showEditNameDialog(context, state),
+          child: Text(
+            state.name,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         const SizedBox(height: 6),
@@ -131,6 +131,65 @@ class ProfileScreen extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+
+  void _showEditNameDialog(BuildContext context, AppStateProvider state) {
+    final controller = TextEditingController(text: state.name);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF1E1A31),
+          title: const Text(
+            'Edit Name',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            style: const TextStyle(color: Colors.white),
+            decoration: const InputDecoration(
+              hintText: 'Enter your name',
+              hintStyle: TextStyle(color: Colors.white30),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFF6A4C93)),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.cyanAccent),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.white54),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF6A4C93),
+              ),
+              onPressed: () {
+                final newName = controller.text.trim();
+                if (newName.isNotEmpty) {
+                  state.updateName(newName);
+                }
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Save',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

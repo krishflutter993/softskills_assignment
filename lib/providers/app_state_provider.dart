@@ -34,12 +34,26 @@ class AppStateProvider extends ChangeNotifier {
   int _weeklyRank = 0;
   bool _rewardClaimed = false;
   String _lastRewardWeek = "";
+  String _name = "Focus Warrior";
 
   int get weeklyScore => _weeklyScore;
   int get diamonds => _diamonds;
   int get weeklyRank => _weeklyRank;
   bool get rewardClaimed => _rewardClaimed;
   String get lastRewardWeek => _lastRewardWeek;
+  String get name => _name;
+
+  bool _darkMode = true;
+  bool _notifications = true;
+  bool _music = true;
+  bool _sound = true;
+  String _language = 'en';
+
+  bool get darkMode => _darkMode;
+  bool get notifications => _notifications;
+  bool get music => _music;
+  bool get sound => _sound;
+  String get language => _language;
 
   int get coins => _coins;
   int get gems => _gems;
@@ -130,7 +144,28 @@ class AppStateProvider extends ChangeNotifier {
       _weeklyRank = user['weekly_rank'] as int? ?? 0;
       _rewardClaimed = (user['reward_claimed'] as int? ?? 0) == 1;
       _lastRewardWeek = user['last_reward_week'] as String? ?? '';
+      _name = user['name'] as String? ?? 'Focus Warrior';
       _isFirstLaunch = false; // We have a user in DB, so not first launch
+
+      // Retroactive fix: Award 100 diamonds/gems if user missed last week's reward due to the bug
+      final prefs = await SharedPreferences.getInstance();
+      final retroactiveApplied = prefs.getBool('retroactive_weekly_reward_applied') ?? false;
+      if (!retroactiveApplied) {
+        _diamonds += 100;
+        _gems += 100;
+        _rewardClaimed = true;
+        await db.update(
+          'Users',
+          {
+            'diamonds': _diamonds,
+            'gems': _gems,
+            'reward_claimed': 1,
+          },
+          where: 'id = ?',
+          whereArgs: [1],
+        );
+        await prefs.setBool('retroactive_weekly_reward_applied', true);
+      }
     }
 
     _updateRankTitle();
@@ -168,6 +203,25 @@ class AppStateProvider extends ChangeNotifier {
         .map((t) => t.replaceAll('assets/theme/', 'assets/Theme/'))
         .toList();
 
+    // Load Settings
+    final List<Map<String, dynamic>> settingsList = await db.query('Settings', limit: 1);
+    if (settingsList.isNotEmpty) {
+      final s = settingsList.first;
+      _darkMode = (s['darkMode'] as int? ?? 1) == 1;
+      _notifications = (s['notifications'] as int? ?? 1) == 1;
+      _music = (s['music'] as int? ?? 1) == 1;
+      _sound = (s['sound'] as int? ?? 1) == 1;
+      _language = s['language'] as String? ?? 'en';
+    } else {
+      await db.insert('Settings', {
+        'darkMode': 1,
+        'notifications': 1,
+        'music': 1,
+        'sound': 1,
+        'language': 'en',
+      });
+    }
+
     _checkDailyStreak(prefs);
     notifyListeners();
   }
@@ -177,6 +231,7 @@ class AppStateProvider extends ChangeNotifier {
     await db.update(
       'Users',
       {
+        'name': _name,
         'coins': _coins,
         'gems': _gems,
         'xp': _xp,
@@ -414,6 +469,37 @@ class AppStateProvider extends ChangeNotifier {
   void deductGems(int amount) {
     _gems -= amount;
     saveState();
+    notifyListeners();
+  }
+
+  void updateName(String newName) {
+    _name = newName;
+    saveState();
+    notifyListeners();
+  }
+
+  Future<void> updateSetting(String key, dynamic value) async {
+    final db = await DatabaseHelper.instance.database;
+    if (key == 'darkMode') {
+      _darkMode = value as bool;
+    } else if (key == 'notifications') {
+      _notifications = value as bool;
+    } else if (key == 'music') {
+      _music = value as bool;
+    } else if (key == 'sound') {
+      _sound = value as bool;
+    } else if (key == 'language') {
+      _language = value as String;
+    }
+
+    await db.update(
+      'Settings',
+      {
+        if (value is bool) key: (value ? 1 : 0) else key: value,
+      },
+      where: 'id = ?',
+      whereArgs: [1],
+    );
     notifyListeners();
   }
 }

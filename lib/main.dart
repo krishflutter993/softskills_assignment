@@ -14,6 +14,7 @@ import 'screens/quiz_categories_screen.dart';
 import 'screens/quiz_playing_screen.dart';
 import 'screens/quiz_completed_screen.dart';
 import 'screens/level_up_screen.dart';
+import 'screens/settings_screen.dart';
 
 void main() {
   runApp(const FocusBuddyApp());
@@ -109,6 +110,7 @@ class FocusBuddyApp extends StatelessWidget {
           '/onboarding': (context) => const OnboardingScreen(),
           '/home': (context) => const MainLayout(),
           '/categories': (context) => const QuizCategoriesScreen(),
+          '/settings': (context) => const SettingsScreen(),
         },
         onGenerateRoute: (settings) {
           if (settings.name == '/quiz') {
