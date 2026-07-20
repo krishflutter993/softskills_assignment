@@ -1,5 +1,5 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show rootBundle, AssetManifest;
 import 'dart:convert' show json;
 import 'package:rto_assmant/database/database_helper.dart';
 
@@ -451,9 +451,8 @@ class CharacterRepository {
 
     // Dynamic scanning of assets
     try {
-      final manifestContent = await rootBundle.loadString('AssetManifest.json');
-      final Map<String, dynamic> manifestMap = json.decode(manifestContent);
-      final characterImages = manifestMap.keys
+      final AssetManifest assetManifest = await AssetManifest.loadFromAssetBundle(rootBundle);
+      final characterImages = assetManifest.listAssets()
           .where(
             (key) =>
                 key.startsWith('assets/images/') &&

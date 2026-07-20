@@ -119,7 +119,7 @@ class NotificationService {
       body,
       _nextInstanceOfTime(hour, minute),
       details,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
@@ -152,7 +152,7 @@ class NotificationService {
       body,
       _nextInstanceOfWeekdayTime(weekday, hour, minute),
       details,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
     );
